@@ -10,15 +10,22 @@ const DashboardCard = ({ title, avatarIcon, link }: any) => {
       title={title}
       style={{ backgroundColor: "#fff", borderRadius: 5, marginTop: 13 }}
       left={(props) => (
-        <Avatar.Icon
-          {...props}
-          icon={avatarIcon}
-          style={{ backgroundColor: Colors.secondary }}
-        />
+        <Link href={link}>
+          <Avatar.Icon
+            {...props}
+            icon={avatarIcon}
+            style={{ backgroundColor: Colors.tertiary }}
+          />
+        </Link>
       )}
       right={(props) => (
         <Link href={link}>
-          <IconButton {...props} icon="arrow-right-circle" />
+          <IconButton
+            {...props}
+            iconColor={Colors.primary}
+            size={30}
+            icon="arrow-right-circle"
+          />
         </Link>
       )}
     />

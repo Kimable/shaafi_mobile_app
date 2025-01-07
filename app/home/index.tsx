@@ -79,7 +79,7 @@ const index = () => {
               <Avatar.Icon
                 icon="calendar"
                 size={30}
-                style={{ backgroundColor: Colors.secondary, marginBottom: 6 }}
+                style={{ backgroundColor: Colors.primary, marginBottom: 6 }}
               />
             </View>
             <Link href="/(forms)/bookAppointment" asChild>
@@ -95,11 +95,11 @@ const index = () => {
                 <Avatar.Icon
                   icon="doctor"
                   size={40}
-                  style={{ backgroundColor: Colors.secondary, marginBottom: 6 }}
+                  style={{ backgroundColor: Colors.tertiary, marginBottom: 6 }}
                 />
               </Link>
               <Link href="/home/doctors">
-                <Text style={[styles.subtitle, { color: Colors.secondary }]}>
+                <Text style={[styles.subtitle, { color: Colors.tertiary }]}>
                   Find A Doctor
                 </Text>
               </Link>
@@ -109,11 +109,11 @@ const index = () => {
                 <Avatar.Icon
                   icon="video"
                   size={40}
-                  style={{ backgroundColor: Colors.secondary, marginBottom: 6 }}
+                  style={{ backgroundColor: Colors.tertiary, marginBottom: 6 }}
                 />
               </Link>
-              <Text style={[styles.subtitle, { color: Colors.secondary }]}>
-                Online Consult
+              <Text style={[styles.subtitle, { color: Colors.tertiary }]}>
+                Video Consult
               </Text>
             </View>
 
@@ -125,19 +125,19 @@ const index = () => {
                   style={{ backgroundColor: Colors.primary, marginBottom: 6 }}
                 />
               </Link>
-              <Text style={[styles.subtitle, { color: Colors.secondary }]}>
+              <Text style={[styles.subtitle, { color: Colors.tertiary }]}>
                 Emergency
               </Text>
             </View>
             <View style={[globalStyles.card, styles.card]}>
-              <Link href="/(patient)/">
+              <Link href="/(patient)/dashboard">
                 <Avatar.Icon
                   icon="home"
                   size={40}
-                  style={{ backgroundColor: Colors.secondary, marginBottom: 6 }}
+                  style={{ backgroundColor: Colors.tertiary, marginBottom: 6 }}
                 />
               </Link>
-              <Text style={[styles.subtitle, { color: Colors.secondary }]}>
+              <Text style={[styles.subtitle, { color: Colors.tertiary }]}>
                 Dashboard
               </Text>
             </View>
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.tertiary,
     padding: 15,
     marginTop: 15,
     borderRadius: 5,

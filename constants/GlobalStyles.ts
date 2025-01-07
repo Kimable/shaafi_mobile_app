@@ -17,6 +17,8 @@ const globalStyles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 5,
     padding: 10,
+    borderWidth: 1,
+    borderColor: "grey",
   },
   button: {
     backgroundColor: Colors.primary,
@@ -31,6 +33,7 @@ const globalStyles = StyleSheet.create({
   buttonText: {
     color: "#FFFFFF",
     textAlign: "center",
+    fontWeight: "800",
   },
 
   text: {
@@ -40,7 +43,7 @@ const globalStyles = StyleSheet.create({
     textAlign: "center",
   },
   title: {
-    fontSize: 25,
+    fontSize: 22,
     textAlign: "center",
     marginVertical: 12,
     fontWeight: "bold",

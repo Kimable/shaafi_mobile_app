@@ -5,7 +5,7 @@ export default function authLayoutNav() {
   return (
     <Stack
       screenOptions={{
-        headerStyle: { backgroundColor: Colors.secondary },
+        headerStyle: { backgroundColor: Colors.tertiary },
         headerTintColor: Colors.white,
       }}
     >

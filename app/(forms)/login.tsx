@@ -44,7 +44,7 @@ const login = () => {
   return (
     <View style={styles.container}>
       <View style={globalStyle.form}>
-        <Text style={globalStyle.title}>Login</Text>
+        <Text style={globalStyle.title}>Login to Continue</Text>
         <TextInput
           onChangeText={setEmail}
           style={globalStyle.input}
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.tertiary,
     alignItems: "center",
     justifyContent: "center",
   },

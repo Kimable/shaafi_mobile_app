@@ -22,7 +22,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerStyle: { backgroundColor: Colors.secondary },
+        headerStyle: { backgroundColor: Colors.tertiary },
         headerTintColor: Colors.white,
         tabBarActiveTintColor: Colors.primary,
       }}

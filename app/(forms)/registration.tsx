@@ -113,7 +113,7 @@ export default registration;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.tertiary,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -127,6 +127,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 5,
     padding: 10,
+    borderWidth: 1,
+    borderColor: "grey",
   },
   button: {
     backgroundColor: Colors.primary,

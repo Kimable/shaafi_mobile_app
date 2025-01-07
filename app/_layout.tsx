@@ -64,7 +64,7 @@ function RootLayoutNav() {
           name="index"
           options={{
             title: "Welcome",
-            headerStyle: { backgroundColor: Colors.secondary },
+            headerStyle: { backgroundColor: Colors.tertiary },
             headerTintColor: Colors.white,
             headerShown: true,
           }}
@@ -74,7 +74,7 @@ function RootLayoutNav() {
           name="ComingSoon"
           options={{
             title: "Coming Soon",
-            headerStyle: { backgroundColor: Colors.secondary },
+            headerStyle: { backgroundColor: Colors.tertiary },
             headerTintColor: Colors.white,
             headerShown: true,
           }}

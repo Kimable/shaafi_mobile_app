@@ -10,7 +10,7 @@ export default function HomeLayoutNav() {
         name="index"
         options={{
           title: "Home",
-          headerStyle: { backgroundColor: Colors.secondary },
+          headerStyle: { backgroundColor: Colors.tertiary },
           headerTintColor: Colors.white,
           headerShown: true,
           headerRight: () => (
@@ -33,7 +33,7 @@ export default function HomeLayoutNav() {
         name="doctors"
         options={{
           title: "Doctors",
-          headerStyle: { backgroundColor: Colors.secondary },
+          headerStyle: { backgroundColor: Colors.tertiary },
           headerTintColor: Colors.white,
           headerShown: true,
         }}

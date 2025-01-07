@@ -48,7 +48,7 @@ const onlineConsultation = () => {
   };
   return (
     <View style={styles.container}>
-      <View style={[globalStyle.form, { backgroundColor: Colors.secondary }]}>
+      <View style={[globalStyle.form, { backgroundColor: Colors.tertiary }]}>
         <Avatar.Icon
           icon="video"
           size={40}
@@ -59,7 +59,7 @@ const onlineConsultation = () => {
           }}
         />
         <Text style={[globalStyle.title, { color: "#fff" }]}>
-          Book An Online Consultation
+          Book A Video Consultation
         </Text>
         <TextInput
           onChangeText={setDate}

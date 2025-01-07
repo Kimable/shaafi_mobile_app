@@ -90,7 +90,7 @@ const bookAppointment = () => {
         <ScrollView>
           <View style={styles.container}>
             <Text style={[globalStyles.title, styles.title]}>
-              Book an Appointment
+              Book Appointment
             </Text>
             <Text style={styles.label}>Date:</Text>
             <TextInput
@@ -115,38 +115,42 @@ const bookAppointment = () => {
             />
 
             <Text style={styles.label}>Preferred Doctor:</Text>
-            <Picker
-              style={styles.picker}
-              selectedValue={doctor}
-              itemStyle={styles.pickerItem}
-              dropdownIconColor="white"
-              onValueChange={(itemValue: any) => setDoctor(itemValue)}
-            >
-              <Picker.Item label="Select Doctor" value="" />
-              {doctors.map((doctor: any) => {
-                return (
-                  <Picker.Item
-                    key={doctor.user.id}
-                    label={`Dr. ${doctor.user.first_name} (${doctor.specialty})`}
-                    value={doctor.user.id}
-                  />
-                );
-              })}
-            </Picker>
+            <View style={styles.pickerContainer}>
+              <Picker
+                style={styles.picker}
+                selectedValue={doctor}
+                itemStyle={styles.pickerItem}
+                dropdownIconColor="white"
+                onValueChange={(itemValue: any) => setDoctor(itemValue)}
+              >
+                <Picker.Item label="Select Doctor" value="" />
+                {doctors.map((doctor: any) => {
+                  return (
+                    <Picker.Item
+                      key={doctor.user.id}
+                      label={`Dr. ${doctor.user.first_name} (${doctor.specialty})`}
+                      value={doctor.user.id}
+                    />
+                  );
+                })}
+              </Picker>
+            </View>
 
             <Text style={styles.label}>Gender:</Text>
-            <Picker
-              style={styles.picker}
-              selectedValue={gender}
-              itemStyle={styles.pickerItem}
-              dropdownIconColor="white"
-              onValueChange={(itemValue: any) => setGender(itemValue)}
-            >
-              <Picker.Item label="Select Gender" value="" />
-              <Picker.Item label="Male" value="male" />
-              <Picker.Item label="Female" value="female" />
-              <Picker.Item label="Other" value="other" />
-            </Picker>
+            <View style={styles.pickerContainer}>
+              <Picker
+                style={styles.picker}
+                selectedValue={gender}
+                itemStyle={styles.pickerItem}
+                dropdownIconColor="white"
+                onValueChange={(itemValue: any) => setGender(itemValue)}
+              >
+                <Picker.Item label="Select Gender" value="" />
+                <Picker.Item label="Male" value="male" />
+                <Picker.Item label="Female" value="female" />
+                <Picker.Item label="Other" value="other" />
+              </Picker>
+            </View>
 
             <Text style={styles.label}>Medical Concern:</Text>
             <TextInput
@@ -183,9 +187,9 @@ const styles = StyleSheet.create({
   title: { color: "#fff", textTransform: "uppercase" },
   container: {
     padding: 40,
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.tertiary,
     margin: 13,
-    borderRadius: 20,
+    borderRadius: 10,
   },
   label: {
     fontSize: 13,
@@ -204,18 +208,27 @@ const styles = StyleSheet.create({
     marginTop: 5,
     paddingHorizontal: 10,
   },
-  picker: {
-    borderWidth: 2,
-    borderColor: Colors.secondary,
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: "#fff",
     borderRadius: 5,
     marginTop: 5,
     color: "#fff",
   },
   description: {
     marginBottom: 18,
+    height: 150, // Set a fixed height or adjust as needed
+    textAlignVertical: "top", // Makes text start from the top
+    padding: 10,
+    lineHeight: 24,
   },
   pickerItem: {
-    borderColor: "white",
+    borderColor: "#fff",
     borderWidth: 1,
+  },
+
+  picker: {
+    color: "#fff",
+    fontSize: 13,
   },
 });
