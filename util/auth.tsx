@@ -13,12 +13,19 @@ const auth = async (path: string) => {
         headers,
       });
       const data = await dbRequest.json();
-      return data;
+      if (data.message === "Invalid token") {
+        await AsyncStorage.setItem("token", "");
+        return null;
+      } else {
+        return data;
+      }
     } else {
-      return "You must be logged in";
+      await AsyncStorage.setItem("token", "");
+      return null;
     }
   } catch (error: any) {
-    return error.message;
+    await AsyncStorage.setItem("token", "");
+    return null;
   }
 };
 

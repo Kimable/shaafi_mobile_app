@@ -40,9 +40,14 @@ const globalStyles = StyleSheet.create({
     textAlign: "center",
   },
   title: {
-    fontSize: 22,
+    fontSize: 25,
     textAlign: "center",
     marginVertical: 12,
+    fontWeight: "bold",
+  },
+  subtitle: {
+    fontSize: 17,
+    textAlign: "center",
     fontWeight: "bold",
   },
   card: {

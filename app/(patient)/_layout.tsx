@@ -4,6 +4,7 @@ import { Pressable, useColorScheme } from "react-native";
 import { Fontisto } from "@expo/vector-icons";
 
 import Colors from "../../constants/Colors";
+import { Avatar } from "react-native-paper";
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -27,31 +28,10 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="dashboard"
         options={{
           title: "Dashboard",
           tabBarIcon: ({ color }) => <TabBarIcon name="chart" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <EvilIcons
-                    name="navicon"
-                    size={25}
-                    color={Colors.primary}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         }}
       />
 
@@ -66,12 +46,41 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="doctors"
+        name="emergency"
         options={{
-          title: "Doctors",
-          tabBarIcon: ({ color }) => (
-            <Fontisto name="doctor" size={24} color={color} />
+          title: "Emergency",
+          tabBarIcon: (props) => (
+            <Avatar.Icon
+              {...props}
+              icon="ambulance"
+              size={40}
+              color="#fff"
+              style={{ backgroundColor: Colors.primary }}
+            />
           ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="health_records"
+        options={{
+          title: "Health Records",
+          tabBarIcon: (props) => (
+            <Avatar.Icon
+              {...props}
+              icon="file-multiple"
+              size={30}
+              style={{ backgroundColor: "#fff" }}
+            />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         }}
       />
     </Tabs>

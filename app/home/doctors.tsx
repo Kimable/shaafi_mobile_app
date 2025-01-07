@@ -9,7 +9,7 @@ import React, { useState, useEffect } from "react";
 import globalStyles from "../../constants/GlobalStyles";
 import { Image } from "expo-image";
 
-import { url } from "../url";
+import { url } from "../../util/url";
 import axios from "axios";
 import Colors from "../../constants/Colors";
 import { Link } from "expo-router";
@@ -34,10 +34,7 @@ const Doctors = () => {
 
   const renderItem = ({ item }: any) => (
     <View style={styles.doctorItem}>
-      <Image
-        source={`${url}/storage${item.user.avatar}`}
-        style={styles.avatar}
-      />
+      <Image source={`${url}/${item.user.avatar}`} style={styles.avatar} />
       <View style={styles.details}>
         <Text style={styles.name}>
           Dr. {item.user.first_name} {item.user.last_name}

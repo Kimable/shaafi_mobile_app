@@ -1,13 +1,13 @@
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { Text, View } from "../../components/Themed";
-import auth from "../auth";
+import auth from "../../util/auth";
 import { useEffect, useState } from "react";
 import { Image } from "expo-image";
-import { url } from "../url";
+import { url } from "../../util/url";
 import Colors from "../../constants/Colors";
 import globalStyles from "../../constants/GlobalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Link, useRouter } from "expo-router";
+import { Link, Redirect, router, useRouter } from "expo-router";
 
 interface ApiData {
   first_name: string;
@@ -23,16 +23,21 @@ export default function PatientProfile() {
 
   useEffect(() => {
     async function fetchData() {
-      const data = await auth("profile");
-      setData(data.user);
-      console.log(data);
+      let tkn = await AsyncStorage.getItem("token");
+      if (tkn === "" || tkn === null) {
+        return router.replace("/");
+      } else {
+        const data = await auth("profile");
+        setData(data.user);
+        console.log(data);
+      }
     }
     fetchData();
   }, []);
 
   const handleLogout = () => {
     AsyncStorage.setItem("token", "");
-    redirect.replace("/");
+    return redirect.replace("/");
   };
 
   return (

@@ -5,7 +5,7 @@ export default function authLayoutNav() {
   return (
     <Stack
       screenOptions={{
-        headerStyle: { backgroundColor: Colors.primary },
+        headerStyle: { backgroundColor: Colors.secondary },
         headerTintColor: Colors.white,
       }}
     >
@@ -27,6 +27,13 @@ export default function authLayoutNav() {
         name="updateProfile"
         options={{
           title: "Update Profile",
+        }}
+      />
+
+      <Stack.Screen
+        name="onlineConsultation"
+        options={{
+          title: "Online Consultation",
         }}
       />
       <Stack.Screen name="registration" options={{ title: "Registration" }} />

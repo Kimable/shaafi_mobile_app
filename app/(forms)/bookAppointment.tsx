@@ -11,7 +11,7 @@ import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 import Colors from "../../constants/Colors";
 import globalStyles from "../../constants/GlobalStyles";
-import { url } from "../url";
+import { url } from "../../util/url";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 

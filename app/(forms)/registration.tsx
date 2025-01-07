@@ -9,7 +9,7 @@ import {
 import Colors from "../../constants/Colors";
 import { Link, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { url } from "../url";
+import { url } from "../../util/url";
 
 const registration = () => {
   const router = useRouter();
@@ -54,7 +54,7 @@ const registration = () => {
         let data = await response.json();
         await AsyncStorage.setItem("token", data.token);
         alert("Registration successful!");
-        router.replace("/(patient)/");
+        router.replace("/home/");
       } else if (response.status === 401) {
         let data = await response.json();
         alert(data.errorMsg);

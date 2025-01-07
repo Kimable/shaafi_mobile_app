@@ -8,10 +8,10 @@ import {
 import React, { useState, useEffect } from "react";
 import globalStyles from "../../constants/GlobalStyles";
 import { useRouter } from "expo-router";
-import auth from "../auth";
+import auth from "../../util/auth";
 import Colors from "../../constants/Colors";
 import { openURL } from "expo-linking";
-import { url } from "../url";
+import { url } from "../../util/url";
 import { openBrowserAsync } from "expo-web-browser";
 
 const Payments = () => {

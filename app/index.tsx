@@ -4,9 +4,10 @@ import { Link, Redirect } from "expo-router";
 import { Pressable, StyleSheet } from "react-native";
 import { Image } from "expo-image";
 import Colors from "../constants/Colors";
-import logo from "../assets/images/logo-shaafi-transparent.png";
+import logo from "../assets/images/landing.png";
 import globalStyles from "../constants/GlobalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const LandingScreen = () => {
   const [token, setToken] = useState<any | null>("");
@@ -16,9 +17,6 @@ const LandingScreen = () => {
       let tkn = await AsyncStorage.getItem("token");
       setToken(tkn);
       console.log(token);
-      if (token) {
-        return <Redirect href="/(patient)" />;
-      }
     };
     isLoggedIn();
   }, [token]);
@@ -26,28 +24,30 @@ const LandingScreen = () => {
   return token === "" || token === null ? (
     <GetStartedScreen />
   ) : (
-    <Redirect href="/(patient)/" />
+    <Redirect href="/home" />
   );
 };
 export default LandingScreen;
 
 const GetStartedScreen = () => {
   return (
-    <>
-      <View style={styles.container}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={[globalStyles.container, styles.container]}>
         <View style={styles.imgContainer}>
           <Image style={styles.image} source={logo} />
         </View>
         <View style={styles.container}>
-          <Text style={globalStyles.title}>Welcome to Shaafi Hospital</Text>
+          <Text style={{ color: Colors.secondary, fontWeight: "bold" }}>
+            Experience exceptional healthcare!
+          </Text>
           <Link href="/(forms)/login" asChild>
             <Pressable style={styles.btn}>
-              <Text style={styles.btnText}>Get Started</Text>
+              <Text style={styles.btnText}>Login to Continue</Text>
             </Pressable>
           </Link>
         </View>
       </View>
-    </>
+    </GestureHandlerRootView>
   );
 };
 
@@ -75,8 +75,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: 10,
-    marginHorizontal: 12,
+    backgroundColor: "#fff",
   },
 
   imgContainer: {
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: 150,
-    height: 150,
+    width: 400,
+    height: 250,
   },
 });

@@ -10,8 +10,8 @@ import {
 import Colors from "../../constants/Colors";
 import { Link, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { url } from "../url";
-import auth from "../auth";
+import { url } from "../../util/url";
+import auth from "../../util/auth";
 import globalStyles from "../../constants/GlobalStyles";
 
 const updateProfile = () => {
@@ -53,7 +53,7 @@ const updateProfile = () => {
         let data = await response.json();
         await AsyncStorage.setItem("token", data.token);
         alert("Profile Update successful!");
-        router.replace("/(patient)/");
+        router.replace("/(patient)/profile");
       } else if (response.status === 401) {
         let data = await response.json();
         alert(data.errorMsg);

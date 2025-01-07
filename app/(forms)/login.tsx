@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import Colors from "../../constants/Colors";
 import globalStyle from "../../constants/GlobalStyles";
-import { url } from "../url";
+import { url } from "../../util/url";
 
 const login = () => {
   const [email, setEmail] = useState("");
@@ -32,8 +32,7 @@ const login = () => {
       // Login successful!
       let data = await response.json();
       await AsyncStorage.setItem("token", data.token);
-      alert("Login Success!");
-      router.replace("/(patient)/");
+      router.replace("/home/");
     } else if (response.status === 401) {
       let data = await response.json();
       alert(data.errorMsg);

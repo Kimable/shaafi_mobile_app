@@ -8,7 +8,7 @@ import {
   Button,
 } from "react-native";
 import globalStyles from "../../constants/GlobalStyles";
-import auth from "../auth";
+import auth from "../../util/auth";
 import Colors from "../../constants/Colors";
 import { Link } from "expo-router";
 
@@ -24,7 +24,7 @@ const AppointmentList = () => {
         setData(data.appointments);
       }
 
-      console.log(data);
+      console.log(data.appointments);
     }
     fetchData();
   }, []);
@@ -81,14 +81,18 @@ const AppointmentList = () => {
         <Text style={styles.appointmentDoctor}>
           Doctor:{" "}
           <Text style={globalStyles.boldText}>
-            Dr. {item.doctor.first_name} {item.doctor.last_name}
+            {item.doctor !== null
+              ? "Dr." + item.doctor.first_name
+              : "Unspecified"}
           </Text>
         </Text>
 
         <Text style={styles.appointmentDoctor}>
           Specialty:{" "}
           <Text style={globalStyles.boldText}>
-            {item.doctor.doctor.specialty}
+            {item.doctor !== null
+              ? item.doctor.doctor.specialty
+              : "Not Applicable"}
           </Text>
         </Text>
       </View>
