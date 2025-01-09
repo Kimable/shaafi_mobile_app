@@ -109,10 +109,12 @@ const AppointmentList = () => {
           <Text style={styles.error}>{data.errorMsg}</Text>
           <View style={styles.container}>
             <View style={styles.buttonContainer}>
-              <Link href="/(forms)/bookAppointment" asChild>
-                <TouchableOpacity style={globalStyles.button}>
-                  <Text style={globalStyles.buttonText}>Book Appointment</Text>
-                </TouchableOpacity>
+              <Link
+                replace
+                href="/(forms)/bookAppointment"
+                style={globalStyles.button}
+              >
+                <Text style={globalStyles.buttonText}>Book Appointment</Text>
               </Link>
 
               <TouchableOpacity
@@ -133,10 +135,8 @@ const AppointmentList = () => {
           />
           <View style={styles.container}>
             <View style={styles.buttonContainer}>
-              <Link href="/(forms)/bookAppointment" asChild>
-                <TouchableOpacity style={globalStyles.button}>
-                  <Text style={globalStyles.buttonText}>Book Appointment</Text>
-                </TouchableOpacity>
+              <Link href="/(forms)/bookAppointment" style={globalStyles.button}>
+                <Text style={globalStyles.buttonText}>Book Appointment</Text>
               </Link>
 
               <TouchableOpacity

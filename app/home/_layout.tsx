@@ -19,7 +19,7 @@ export default function HomeLayoutNav() {
                 {({ pressed }) => (
                   <EvilIcons
                     name="navicon"
-                    size={25}
+                    size={28}
                     color={Colors.white}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
@@ -33,6 +33,15 @@ export default function HomeLayoutNav() {
         name="doctors"
         options={{
           title: "Doctors",
+          headerStyle: { backgroundColor: Colors.tertiary },
+          headerTintColor: Colors.white,
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="singleDoctor/[id]"
+        options={{
+          title: "Doctor",
           headerStyle: { backgroundColor: Colors.tertiary },
           headerTintColor: Colors.white,
           headerShown: true,

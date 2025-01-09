@@ -1,13 +1,10 @@
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import { View } from "../../components/Themed";
-import { Link, Redirect, router } from "expo-router";
+import { router } from "expo-router";
 import auth from "../../util/auth";
-import { Image } from "expo-image";
 import Colors from "../../constants/Colors";
-import { url } from "../../util/url";
-import { Avatar, Button, IconButton, Menu, Text } from "react-native-paper";
-import globalStyles from "../../constants/GlobalStyles";
+import { Text } from "react-native-paper";
 
 import DashboardCard from "../../components/DashboardCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -66,16 +63,22 @@ export default function PatientDashboard() {
           <Text variant="bodyMedium">How are you feeling today?</Text>
 
           <DashboardCard
+            title="Find Doctors"
+            avatarIcon="doctor"
+            link="/home/doctors"
+          />
+
+          <DashboardCard
             title="My Profile"
             avatarIcon="account"
             link="/profile"
           />
 
-          <DashboardCard
+          {/* <DashboardCard
             title="Manage Family Members"
             avatarIcon="account-group"
             link="/ComingSoon"
-          />
+          /> */}
 
           <DashboardCard
             title="Book Appointment"
@@ -84,16 +87,16 @@ export default function PatientDashboard() {
           />
 
           <DashboardCard
-            title="Orders"
-            avatarIcon="cart"
+            title="Your Appointments"
+            avatarIcon="calendar"
             link="/appointments"
           />
 
-          <DashboardCard
+          {/* <DashboardCard
             title="Delivery Address"
             avatarIcon="map-marker"
             link="/ComingSoon"
-          />
+          /> */}
 
           <DashboardCard
             title="How App Works"

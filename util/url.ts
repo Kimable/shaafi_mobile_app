@@ -1,1 +1,1 @@
-export const url = "https://dev.shaafihospital.so";
+export const url = "https://shaafihospital.so";

@@ -6,9 +6,6 @@ import { Fontisto } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import { Avatar } from "react-native-paper";
 
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof EvilIcons>["name"];
   color: string;
@@ -25,6 +22,7 @@ export default function TabLayout() {
         headerStyle: { backgroundColor: Colors.tertiary },
         headerTintColor: Colors.white,
         tabBarActiveTintColor: Colors.primary,
+        tabBarHideOnKeyboard: true,
       }}
     >
       <Tabs.Screen
@@ -49,9 +47,8 @@ export default function TabLayout() {
         name="emergency"
         options={{
           title: "Emergency",
-          tabBarIcon: (props) => (
+          tabBarIcon: ({ color }) => (
             <Avatar.Icon
-              {...props}
               icon="ambulance"
               size={40}
               color="#fff"
@@ -65,12 +62,12 @@ export default function TabLayout() {
         name="health_records"
         options={{
           title: "Health Records",
-          tabBarIcon: (props) => (
+          tabBarIcon: ({ color }) => (
             <Avatar.Icon
-              {...props}
               icon="file-multiple"
               size={30}
               style={{ backgroundColor: "#fff" }}
+              color={Colors.primary}
             />
           ),
         }}

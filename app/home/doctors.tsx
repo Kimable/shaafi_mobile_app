@@ -5,7 +5,6 @@ import {
   FlatList,
   TouchableOpacity,
   SafeAreaView,
-  Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import globalStyles from "../../constants/GlobalStyles";
@@ -41,7 +40,7 @@ const Doctors = () => {
           Dr. {item.user.first_name} {item.user.last_name}
         </Text>
         <Text style={styles.specialty}>{item.specialty}</Text>
-        <Link href="/(forms)/bookAppointment" asChild>
+        <Link href={`/home/singleDoctor/${item.user.id}`} asChild>
           <TouchableOpacity
             onPress={() => handleBookAppointment(item.user.id)}
             style={styles.bookButton}
@@ -119,11 +118,12 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   name: {
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: "800",
   },
   specialty: {
-    fontSize: 13,
+    fontSize: 10,
+    fontWeight: "bold",
     color: "#666",
   },
   bookButton: {

@@ -76,7 +76,7 @@ export default function PatientProfile() {
                 Phone: <Text style={styles.innerText}>{data?.phone}</Text>
               </Text>
             </View>
-            <Link href="/(forms)/updateProfile" asChild>
+            <Link replace href="/(forms)/updateProfile" asChild>
               <TouchableOpacity style={styles.buttonContainer}>
                 <Text style={styles.btnText}>Update Profile</Text>
               </TouchableOpacity>

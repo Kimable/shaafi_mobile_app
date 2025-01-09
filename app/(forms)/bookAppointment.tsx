@@ -14,8 +14,10 @@ import globalStyles from "../../constants/GlobalStyles";
 import { url } from "../../util/url";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { useRouter } from "expo-router";
 
 const bookAppointment = () => {
+  const router = useRouter();
   const [doctors, setDoctors]: any = useState(null);
 
   useEffect(() => {
@@ -55,15 +57,15 @@ const bookAppointment = () => {
         body: JSON.stringify({
           date: date.toDateString(),
           time,
-          doctor,
           gender,
           medical_issue: medicalConcern,
           description,
-          booked_doctor_id: 5,
+          booked_doctor_id: doctor,
         }),
       });
       if (response.status === 201) {
-        alert("Booked successfully!");
+        alert("Your Appointment has been Booked successfully!");
+        router.replace("/(patient)/dashboard");
       } else if (response.status === 401 || response.status === 500) {
         let data = await response.json();
         alert(data.errorMsg);

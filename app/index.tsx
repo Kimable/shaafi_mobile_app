@@ -40,8 +40,8 @@ const GetStartedScreen = () => {
           <Text style={{ color: Colors.secondary, fontWeight: "bold" }}>
             Experience exceptional healthcare!
           </Text>
-          <Link href="/(forms)/login" asChild>
-            <Pressable style={styles.btn}>
+          <Link href="/(forms)/login" style={styles.btn} asChild>
+            <Pressable>
               <Text style={styles.btnText}>Login to Continue</Text>
             </Pressable>
           </Link>
