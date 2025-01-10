@@ -7,7 +7,6 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 import Colors from "../../constants/Colors";
 import globalStyles from "../../constants/GlobalStyles";
@@ -15,6 +14,8 @@ import { url } from "../../util/url";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useRouter } from "expo-router";
+import { EvilIcons } from "@expo/vector-icons";
+import CalendarPicker from "react-native-calendar-picker";
 
 const bookAppointment = () => {
   const router = useRouter();
@@ -77,10 +78,9 @@ const bookAppointment = () => {
     }
   };
 
-  const onDateChange = (event: any, selectedDate: any) => {
-    if (selectedDate) {
-      setShowDatePicker(false);
-      setDate(selectedDate);
+  const onDateChange = (date: any) => {
+    if (date) {
+      setDate(date);
     }
   };
 
@@ -91,23 +91,71 @@ const bookAppointment = () => {
       ) : (
         <ScrollView>
           <View style={styles.container}>
-            <Text style={[globalStyles.title, styles.title]}>
-              Book Appointment
+            <Text style={globalStyles.title}>Book Appointment</Text>
+
+            {/* Calender */}
+            <Text style={[styles.label, { marginBottom: 5 }]}>
+              Select Date:
             </Text>
-            <Text style={styles.label}>Date:</Text>
-            <TextInput
-              style={styles.input}
-              value={date.toDateString()} // Display the selected date as a string
-              onFocus={() => setShowDatePicker(true)} // Show the date picker when the input is focused
-            />
-            {showDatePicker && (
-              <RNDateTimePicker
-                value={date}
-                mode="date"
-                display="default"
-                onChange={onDateChange}
+            <View>
+              <CalendarPicker
+                // Basic settings
+                onDateChange={onDateChange}
+                selectedStartDate={date}
+                width={320}
+                // Customizing colors
+                selectedDayColor={Colors.primary}
+                selectedDayTextColor="#FFFFFF"
+                todayBackgroundColor="#E6E6E6"
+                todayTextStyle={{ color: Colors.tertiary }}
+                // Header styling
+                monthTitleStyle={{
+                  color: "#000",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                }}
+                yearTitleStyle={{
+                  color: "#000",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                }}
+                // Day names styling
+                dayLabelsWrapper={{
+                  borderTopWidth: 0,
+                  borderBottomWidth: 0,
+                }}
+                weekdays={["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]}
+                textStyle={{
+                  fontFamily: "Arial",
+                  color: "#000000",
+                }}
+                // Restrictions
+                minDate={new Date()} // Can't select past dates
+                maxDate={new Date(2025, 6, 3)} // Can't select dates after July 3, 2025
+                // Disable specific dates or weekends
+                //disabledDates={["2024-01-19"]} // Specific dates
+                //disabledDaysOfWeek={[0, 6]} // Sundays and Saturdays
+                // Custom previous/next buttons
+                previousComponent={
+                  <EvilIcons name="chevron-left" size={30} color="#666" />
+                }
+                nextComponent={
+                  <EvilIcons name="chevron-right" size={30} color="#666" />
+                }
+                // Additional options
+                allowRangeSelection={false} // Set to true if you want date range selection
+                scrollable={true} // Enable month scrolling
+                horizontal={true} // Horizontal scrolling
+                // Customize date number style
+                customDatesStyles={[
+                  {
+                    date: new Date(2024, 0, 15), // January 15, 2024
+                    style: { backgroundColor: "#ffddf4" },
+                    textStyle: { color: "#700f57" },
+                  },
+                ]}
               />
-            )}
+            </View>
 
             <Text style={styles.label}>Time:</Text>
             <TextInput
@@ -186,36 +234,36 @@ const bookAppointment = () => {
 export default bookAppointment;
 
 const styles = StyleSheet.create({
-  title: { color: "#fff", textTransform: "uppercase" },
   container: {
-    padding: 40,
-    backgroundColor: Colors.tertiary,
+    padding: 15,
+    backgroundColor: "#fff",
     margin: 13,
     borderRadius: 10,
   },
   label: {
-    fontSize: 13,
+    fontSize: 14,
+    fontWeight: "700",
     marginTop: 10,
-    color: "#fff",
+    color: Colors.tertiary,
   },
   datePicker: {
     marginTop: 5,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#fff",
+    borderColor: "#666",
     borderRadius: 5,
-    color: "#fff",
+    color: "#666",
     height: 40,
     marginTop: 5,
     paddingHorizontal: 10,
   },
   pickerContainer: {
     borderWidth: 1,
-    borderColor: "#fff",
+    borderColor: "#666",
     borderRadius: 5,
     marginTop: 5,
-    color: "#fff",
+    color: "#0c0c0c",
   },
   description: {
     marginBottom: 18,
@@ -225,12 +273,12 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   pickerItem: {
-    borderColor: "#fff",
+    borderColor: "#666",
     borderWidth: 1,
   },
 
   picker: {
-    color: "#fff",
+    color: "#666",
     fontSize: 13,
   },
 });

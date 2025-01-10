@@ -43,10 +43,12 @@ const globalStyles = StyleSheet.create({
     textAlign: "center",
   },
   title: {
-    fontSize: 22,
+    fontSize: 17,
     textAlign: "center",
-    marginVertical: 12,
-    fontWeight: "bold",
+    marginVertical: 10,
+    color: Colors.secondary,
+    textTransform: "uppercase",
+    fontWeight: "800",
   },
   subtitle: {
     fontSize: 17,
