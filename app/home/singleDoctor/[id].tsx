@@ -104,7 +104,9 @@ const SingleDoctor = () => {
         }),
       });
       if (response.status === 201) {
-        alert(`Success! Booked appointment with Dr. ${doctor.first_name}`);
+        alert(
+          `Success! Booked appointment with Dr. ${doctor.first_name}. Check your email for details.`
+        );
         router.replace("/(patient)/dashboard");
       } else if (response.status === 401 || response.status === 500) {
         let data = await response.json();
