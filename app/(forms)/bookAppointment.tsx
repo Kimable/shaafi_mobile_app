@@ -6,6 +6,10 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Dimensions,
+  ActivityIndicator,
+  Alert,
+  Keyboard,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Colors from "../../constants/Colors";
@@ -41,10 +45,23 @@ const bookAppointment = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleAppointmentSubmit = async () => {
-    if (!date || !time || !gender) {
-      alert("Please fill in all required fields.");
+    if (!date) {
+      Alert.alert("Empty Date", "Please select a date");
       return;
     }
+    if (!time) {
+      Alert.alert("Empty time", "Please select a time");
+      return;
+    }
+    if (!doctor) {
+      Alert.alert("Empty doctor", "Please select a doctor");
+      return;
+    }
+    if (!medicalConcern) {
+      Alert.alert("Empty Medical Concern", "Please write a Medical Concern");
+      return;
+    }
+
     try {
       const token = await AsyncStorage.getItem("token");
       const headers = new Headers();
@@ -87,17 +104,16 @@ const bookAppointment = () => {
   return (
     <>
       {doctors === null ? (
-        <Text style={globalStyles.loading}>Loading...</Text>
+        <View style={globalStyles.centerContainer}>
+          <ActivityIndicator size="large" color={Colors.primary} />
+        </View>
       ) : (
-        <ScrollView>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.container}>
             <Text style={globalStyles.title}>Book Appointment</Text>
 
-            {/* Calender */}
-            <Text style={[styles.label, { marginBottom: 5 }]}>
-              Select Date:
-            </Text>
-            <View>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Select Date</Text>
               <CalendarPicker
                 // Basic settings
                 onDateChange={onDateChange}
@@ -106,8 +122,8 @@ const bookAppointment = () => {
                 // Customizing colors
                 selectedDayColor={Colors.primary}
                 selectedDayTextColor="#FFFFFF"
-                todayBackgroundColor="#E6E6E6"
-                todayTextStyle={{ color: Colors.tertiary }}
+                todayBackgroundColor="#000"
+                todayTextStyle={{ color: "#fff" }}
                 // Header styling
                 monthTitleStyle={{
                   color: "#000",
@@ -157,72 +173,82 @@ const bookAppointment = () => {
               />
             </View>
 
-            <Text style={styles.label}>Time:</Text>
-            <TextInput
-              style={styles.input}
-              value={time}
-              onChangeText={(text) => setTime(text)}
-            />
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Time</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="HH:MM AM/PM"
+                value={time}
+                onChangeText={setTime}
+              />
+            </View>
 
-            <Text style={styles.label}>Preferred Doctor:</Text>
-            <View style={styles.pickerContainer}>
-              <Picker
-                style={styles.picker}
-                selectedValue={doctor}
-                itemStyle={styles.pickerItem}
-                dropdownIconColor="white"
-                onValueChange={(itemValue: any) => setDoctor(itemValue)}
-              >
-                <Picker.Item label="Select Doctor" value="" />
-                {doctors.map((doctor: any) => {
-                  return (
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Preferred Doctor</Text>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  style={styles.picker}
+                  selectedValue={doctor}
+                  onValueChange={setDoctor}
+                >
+                  <Picker.Item label="Select Doctor" value="" />
+                  {doctors.map((doctor: any) => (
                     <Picker.Item
                       key={doctor.user.id}
                       label={`Dr. ${doctor.user.first_name} (${doctor.specialty})`}
                       value={doctor.user.id}
                     />
-                  );
-                })}
-              </Picker>
+                  ))}
+                </Picker>
+              </View>
             </View>
 
-            <Text style={styles.label}>Gender:</Text>
-            <View style={styles.pickerContainer}>
-              <Picker
-                style={styles.picker}
-                selectedValue={gender}
-                itemStyle={styles.pickerItem}
-                dropdownIconColor="white"
-                onValueChange={(itemValue: any) => setGender(itemValue)}
-              >
-                <Picker.Item label="Select Gender" value="" />
-                <Picker.Item label="Male" value="male" />
-                <Picker.Item label="Female" value="female" />
-                <Picker.Item label="Other" value="other" />
-              </Picker>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Gender</Text>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  style={styles.picker}
+                  selectedValue={gender}
+                  onValueChange={setGender}
+                >
+                  <Picker.Item label="Select Gender" value="" />
+                  <Picker.Item label="Male" value="male" />
+                  <Picker.Item label="Female" value="female" />
+                  <Picker.Item label="Other" value="other" />
+                </Picker>
+              </View>
             </View>
 
-            <Text style={styles.label}>Medical Concern:</Text>
-            <TextInput
-              style={styles.input}
-              value={medicalConcern}
-              onChangeText={(text) => setMedicalConcern(text)}
-            />
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Medical Concern</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Brief medical concern"
+                value={medicalConcern}
+                onChangeText={setMedicalConcern}
+              />
+            </View>
 
-            <Text style={styles.label}>Description:</Text>
-            <TextInput
-              style={[styles.input, styles.description]}
-              multiline
-              numberOfLines={4}
-              value={description}
-              onChangeText={(text) => setDescription(text)}
-            />
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Description</Text>
+              <TextInput
+                style={[styles.input, styles.description]}
+                multiline
+                numberOfLines={4}
+                placeholder="Provide more details about your medical concern"
+                value={description}
+                onChangeText={setDescription}
+              />
+            </View>
 
             <TouchableOpacity
-              style={globalStyles.button}
-              onPress={handleAppointmentSubmit}
+              style={styles.submitButton}
+              onPress={() => {
+                Keyboard.dismiss();
+                handleAppointmentSubmit();
+              }}
             >
-              <Text style={globalStyles.buttonText}>Submit Appointment</Text>
+              <Text style={styles.submitButtonText}>Submit Appointment</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -231,54 +257,72 @@ const bookAppointment = () => {
   );
 };
 
-export default bookAppointment;
-
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    backgroundColor: "#f5f5f7",
+  },
   container: {
-    padding: 15,
-    backgroundColor: "#fff",
-    margin: 13,
-    borderRadius: 10,
+    padding: 20,
+    backgroundColor: "white",
+    margin: 15,
+    borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  inputGroup: {
+    marginBottom: 15,
   },
   label: {
     fontSize: 14,
     fontWeight: "700",
-    marginTop: 10,
+    marginBottom: 8,
     color: Colors.tertiary,
-  },
-  datePicker: {
-    marginTop: 5,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#666",
-    borderRadius: 5,
-    color: "#666",
-    height: 40,
-    marginTop: 5,
-    paddingHorizontal: 10,
+    borderColor: "#e0e0e0",
+    borderRadius: 10,
+    color: "#333",
+    height: 50,
+    paddingHorizontal: 15,
+    backgroundColor: "white",
+  },
+  description: {
+    height: 120,
+    textAlignVertical: "top",
+    paddingTop: 15,
+    lineHeight: 24,
   },
   pickerContainer: {
     borderWidth: 1,
-    borderColor: "#666",
-    borderRadius: 5,
-    marginTop: 5,
-    color: "#0c0c0c",
+    borderColor: "#e0e0e0",
+    borderRadius: 10,
+    backgroundColor: "white",
   },
-  description: {
-    marginBottom: 18,
-    height: 150, // Set a fixed height or adjust as needed
-    textAlignVertical: "top", // Makes text start from the top
-    padding: 10,
-    lineHeight: 24,
-  },
-  pickerItem: {
-    borderColor: "#666",
-    borderWidth: 1,
-  },
-
   picker: {
-    color: "#666",
-    fontSize: 13,
+    color: "#333",
+  },
+  submitButton: {
+    backgroundColor: Colors.primary,
+    borderRadius: 10,
+    paddingVertical: 15,
+    alignItems: "center",
+    marginTop: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  submitButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
+
+export default bookAppointment;

@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import globalStyles from "../../constants/GlobalStyles";
@@ -63,7 +64,9 @@ const Doctors = () => {
     <SafeAreaView style={styles.container}>
       <Text style={globalStyles.title}>Our Expert Doctors</Text>
       {doctors.length === 0 ? (
-        <Text style={globalStyles.loading}>Loading...</Text>
+        <View style={globalStyles.centerContainer}>
+          <ActivityIndicator size="large" color={Colors.primary} />
+        </View>
       ) : (
         <FlatList
           data={doctors}

@@ -6,6 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { Link, useRouter } from "expo-router";
@@ -36,11 +38,15 @@ const updateProfile = () => {
 
   const handleUpdate = async () => {
     try {
+      const token = await AsyncStorage.getItem("token");
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      headers.append("Content-Type", "application/json");
+      headers.append("Authorization", `Bearer ${token}`);
+
       const response = await fetch(`${url}/api/update-profile`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers,
         body: JSON.stringify({
           first_name: firstName,
           middle_name: middleName,
@@ -49,67 +55,87 @@ const updateProfile = () => {
           phone,
         }),
       });
+      let data = await response.json();
       if (response.status === 201) {
-        let data = await response.json();
-        await AsyncStorage.setItem("token", data.token);
-        alert("Profile Update successful!");
+        console.log(data);
+        Alert.alert("Success", "Profile Update successful!");
         router.replace("/(patient)/profile");
-      } else if (response.status === 401) {
+      }
+      if (response.status === 401) {
         let data = await response.json();
         alert(data.errorMsg);
         console.log(data);
-      } else {
-        alert("Something went wrong! Please try again.");
       }
+      console.log(data);
     } catch (error) {
-      alert("Something went wrong! Please try again.");
+      Alert.alert("Error 2", "Something went wrong! Please try again.");
       console.log(error);
     }
   };
   return (
     <>
       {user === null ? (
-        <Text style={globalStyles.loading}>Loading...</Text>
+        <View style={globalStyles.centerContainer}>
+          <ActivityIndicator size="large" color={Colors.primary} />
+        </View>
       ) : (
         <View style={styles.container}>
-          <ScrollView>
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style={styles.form}>
               <Text style={styles.title}>Update Profile</Text>
-              <Text style={styles.label}>First Name:</Text>
-              <TextInput
-                style={styles.input}
-                placeholder={user.first_name}
-                onChangeText={setFirstName}
-              />
-              <Text style={styles.label}>Middle Name:</Text>
-              <TextInput
-                style={styles.input}
-                placeholder={
-                  !user.middle_name ? "Middle Name" : user.middle_name
-                }
-                onChangeText={setMiddleName}
-              />
-              <Text style={styles.label}>Last Name:</Text>
-              <TextInput
-                style={styles.input}
-                placeholder={user.last_name}
-                onChangeText={setLastName}
-              />
-              <Text style={styles.label}>Phone No:</Text>
-              <TextInput
-                style={styles.input}
-                placeholder={user.phone}
-                onChangeText={setPhone}
-              />
-              <Text style={styles.label}>Email:</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                editable={false}
-                value={user.email}
-              />
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>First Name</Text>
+                <TextInput
+                  style={styles.input}
+                  value={firstName}
+                  onChangeText={setFirstName}
+                  placeholder={user.first_name}
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Middle Name</Text>
+                <TextInput
+                  style={styles.input}
+                  value={middleName}
+                  onChangeText={setMiddleName}
+                  placeholder={user.middle_name || "Middle Name"}
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Last Name</Text>
+                <TextInput
+                  style={styles.input}
+                  value={lastName}
+                  onChangeText={setLastName}
+                  placeholder={user.last_name}
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Phone Number</Text>
+                <TextInput
+                  style={styles.input}
+                  value={phone}
+                  onChangeText={setPhone}
+                  placeholder={user.phone}
+                  keyboardType="phone-pad"
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Email</Text>
+                <TextInput
+                  style={[styles.input, styles.disabledInput]}
+                  value={user.email}
+                  editable={false}
+                />
+              </View>
+
               <TouchableOpacity style={styles.button} onPress={handleUpdate}>
-                <Text style={styles.buttonText}>Update</Text>
+                <Text style={styles.buttonText}>Update Profile</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -124,48 +150,58 @@ export default updateProfile;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.secondary,
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "#f5f5f7",
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingVertical: 20,
   },
   form: {
-    width: 300,
-    padding: 20,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 10,
-    marginTop: 15,
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "700",
+    marginBottom: 20,
+    textAlign: "center",
+    color: "#333",
+  },
+  inputGroup: {
+    marginBottom: 15,
+  },
+  label: {
+    marginBottom: 8,
+    color: "#666",
+    fontWeight: "600",
   },
   input: {
-    marginBottom: 10,
-    borderRadius: 5,
-    padding: 10,
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 12,
+    fontSize: 16,
+  },
+  disabledInput: {
+    backgroundColor: "#f0f0f0",
+    color: "#999",
   },
   button: {
     backgroundColor: Colors.primary,
-    borderRadius: 5,
-    padding: 10,
+    borderRadius: 10,
+    paddingVertical: 15,
+    alignItems: "center",
+    marginTop: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   buttonText: {
-    color: "#FFFFFF",
-    textAlign: "center",
-  },
-
-  text: {
-    color: Colors.secondary,
-    marginTop: 12,
-    fontSize: 10,
-    textAlign: "center",
-  },
-  title: {
-    fontSize: 20,
-    textAlign: "center",
-    marginVertical: 12,
-    fontWeight: "bold",
-  },
-  label: {
-    fontSize: 13,
-    marginTop: 10,
-    marginLeft: 12,
-    color: Colors.secondary,
+    color: "white",
+    fontSize: 18,
+    fontWeight: "600",
   },
 });

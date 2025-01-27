@@ -67,7 +67,7 @@ export default function TabLayout() {
               icon="file-multiple"
               size={30}
               style={{ backgroundColor: "#fff" }}
-              color={Colors.primary}
+              color={color}
             />
           ),
         }}

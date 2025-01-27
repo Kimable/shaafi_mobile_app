@@ -5,6 +5,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { Link, useRouter } from "expo-router";
@@ -22,7 +23,7 @@ const registration = () => {
 
   const handleRegister = async () => {
     if (!firstName || !email || !password) {
-      alert("Please fill in all required fields.");
+      Alert.alert("Empty Fields", "Please fill in all required fields.");
       return;
     }
     function isValidEmail(email: string) {
@@ -33,7 +34,7 @@ const registration = () => {
     if (isValidEmail(email)) {
       console.log("Valid email address");
     } else {
-      alert("Invalid email address");
+      Alert.alert("Invalid Email", "Invalid email address");
       return;
     }
     try {
@@ -53,17 +54,17 @@ const registration = () => {
       if (response.status === 201) {
         let data = await response.json();
         await AsyncStorage.setItem("token", data.token);
-        alert("Registration successful!");
+        Alert.alert("Success", "Registration successful!");
         router.replace("/home/");
       } else if (response.status === 401) {
         let data = await response.json();
-        alert(data.errorMsg);
+        Alert.alert("Errror", data.errorMsg);
         console.log(data);
       } else {
-        alert("Something went wrong! Please try again.");
+        Alert.alert("Errror", "Something went wrong! Please try again.");
       }
     } catch (error) {
-      alert("Something went wrong! Please try again.");
+      Alert.alert("Errror", "Something went wrong! Please try again.");
       console.log(error);
     }
   };

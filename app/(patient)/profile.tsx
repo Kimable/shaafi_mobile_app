@@ -1,15 +1,24 @@
-import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+  RefreshControl,
+  Alert,
+} from "react-native";
 import { Text, View } from "../../components/Themed";
-import auth from "../../util/auth";
-import { useEffect, useState } from "react";
 import { Image } from "expo-image";
-import { url } from "../../util/url";
-import Colors from "../../constants/Colors";
-import globalStyles from "../../constants/GlobalStyles";
+import { router, Link, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Link, Redirect, router, useRouter } from "expo-router";
+import Colors from "../../constants/Colors";
+import { url } from "../../util/url";
+import auth from "../../util/auth";
+import * as ImagePicker from "expo-image-picker";
+import axios from "axios";
+import { MaterialIcons } from "@expo/vector-icons";
 
-interface ApiData {
+interface ProfileData {
   first_name: string;
   last_name: string;
   email: string;
@@ -17,75 +26,164 @@ interface ApiData {
   avatar: string | null;
 }
 
+interface InfoCardProps {
+  label: string;
+  value: string;
+}
+
+const InfoCard: React.FC<InfoCardProps> = ({ label, value }) => (
+  <View style={styles.card}>
+    <Text style={styles.cardLabel}>{label}</Text>
+    <Text style={styles.cardValue}>{value}</Text>
+  </View>
+);
+
 export default function PatientProfile() {
-  const [data, setData] = useState<ApiData | null>(null);
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const redirect = useRouter();
 
-  useEffect(() => {
-    async function fetchData() {
-      let tkn = await AsyncStorage.getItem("token");
-      if (tkn === "" || tkn === null) {
-        return router.replace("/");
-      } else {
-        const data = await auth("profile");
-        setData(data.user);
-        console.log(data);
-      }
+  const fetchProfileData = async () => {
+    try {
+      const response = await auth("profile");
+      setProfileData(response.user);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    } finally {
+      setIsLoading(false);
     }
-    fetchData();
-  }, []);
-
-  const handleLogout = () => {
-    AsyncStorage.setItem("token", "");
-    return redirect.replace("/");
   };
 
+  useEffect(() => {
+    fetchProfileData();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.setItem("token", "");
+      redirect.replace("/");
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
+  // Update user avatar
+  const updateAvatar = async () => {
+    // Request image picker permissions
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission Required",
+        "Sorry, we need camera roll permissions to make this work!"
+      );
+      return;
+    }
+    // Launch image picker
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+
+    if (!result.canceled) {
+      const selectedImage = result.assets[0];
+
+      // Create form data for upload
+      const formData = new FormData();
+      formData.append("image", {
+        uri: selectedImage.uri,
+        type: "image/jpeg",
+        name: "avatar-min.jpg",
+      } as any);
+
+      try {
+        // Send upload request
+        const token = await AsyncStorage.getItem("token");
+
+        const response = await axios.post(
+          `${url}/api/update-user-avatar`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        // Handle successful upload
+        console.log("Avatar updated:", response.data);
+        // Update profile data state to reflect the new avatar
+        Alert.alert("Avatar updated", "User avatar updated successfully");
+      } catch (error) {
+        console.error("Avatar upload error:", error);
+        Alert.alert(
+          "Avatar upload error",
+          "Failed to update avatar. Please try again later"
+        );
+      }
+    }
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchProfileData().finally(() => setRefreshing(false));
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        {data === null ? (
-          <Text style={globalStyles.loading}>Loading...</Text>
-        ) : (
-          <>
-            <View style={styles.header}>
-              <Text style={styles.title}>Your Profile</Text>
-              <Image
-                style={styles.avatar}
-                source={`${url}/storage${data?.avatar}`}
-              />
-            </View>
-            <Text style={styles.subtitle}>Personal information</Text>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <View style={styles.header}>
+        <View style={styles.avatarContainer}>
+          <Image
+            style={styles.avatar}
+            source={`${url}${profileData?.avatar}`}
+            contentFit="cover"
+            transition={1000}
+          />
+          <TouchableOpacity style={styles.updateIcon} onPress={updateAvatar}>
+            <MaterialIcons
+              name="add-a-photo"
+              size={24}
+              color={Colors.primary}
+            />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.name}>
+          {profileData?.first_name} {profileData?.last_name}
+        </Text>
+      </View>
 
-            <View style={globalStyles.card}>
-              <Text style={styles.text}>
-                Name:{" "}
-                <Text style={styles.innerText}>
-                  {data?.first_name} {data?.last_name}
-                </Text>
-              </Text>
-            </View>
+      <View style={styles.content}>
+        <Text style={styles.sectionTitle}>Personal Information</Text>
 
-            <View style={globalStyles.card}>
-              <Text style={styles.text}>
-                Email: <Text style={styles.innerText}>{data?.email}</Text>
-              </Text>
-            </View>
+        <InfoCard label="Email" value={profileData?.email || ""} />
 
-            <View style={globalStyles.card}>
-              <Text style={styles.text}>
-                Phone: <Text style={styles.innerText}>{data?.phone}</Text>
-              </Text>
-            </View>
-            <Link replace href="/(forms)/updateProfile" asChild>
-              <TouchableOpacity style={styles.buttonContainer}>
-                <Text style={styles.btnText}>Update Profile</Text>
-              </TouchableOpacity>
-            </Link>
-            <TouchableOpacity onPress={handleLogout}>
-              <Text style={styles.logoutText}>Logout</Text>
-            </TouchableOpacity>
-          </>
-        )}
+        <InfoCard label="Phone" value={profileData?.phone || ""} />
+
+        <Link href="/(forms)/updateProfile" asChild>
+          <TouchableOpacity style={styles.updateButton}>
+            <Text style={styles.updateButtonText}>Update Profile</Text>
+          </TouchableOpacity>
+        </Link>
+
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={styles.logoutText}>Logout</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -94,70 +192,127 @@ export default function PatientProfile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+  },
+  loadingContainer: {
+    flex: 1,
     justifyContent: "center",
+    alignItems: "center",
   },
   header: {
     backgroundColor: Colors.secondary,
-    width: "100%",
-    paddingVertical: 20,
+    paddingTop: 40,
+    paddingBottom: 30,
+    alignItems: "center",
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  title: {
-    fontSize: 25,
-    marginTop: 10,
+  avatarContainer: {
+    position: "relative",
+    width: 120,
+    height: 120,
+    marginBottom: 15,
+  },
+
+  avatar: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 60,
+    borderWidth: 4,
+    borderColor: Colors.white,
+  },
+
+  updateIcon: {
+    position: "absolute",
+    bottom: 5,
+    right: 5,
+    backgroundColor: Colors.white,
+    borderRadius: 15,
+    padding: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
+  },
+
+  name: {
+    fontSize: 24,
     fontWeight: "bold",
     color: Colors.white,
     textAlign: "center",
   },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 63,
-    marginBottom: 10,
-    alignSelf: "center",
-    marginTop: 10,
+  content: {
+    padding: 20,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-  text: {
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  innerText: {
-    color: Colors.primary,
-  },
-  subtitle: {
+  sectionTitle: {
     fontSize: 18,
     fontWeight: "700",
-    marginTop: 16,
-    marginBottom: 13,
-    textTransform: "uppercase",
-    textAlign: "left",
+    marginVertical: 20,
+    color: Colors.secondary,
   },
-  buttonContainer: {
-    marginTop: 10,
-    height: 45,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 20,
-    color: "#fff",
-    width: 300,
-    borderRadius: 40,
+  card: {
+    backgroundColor: Colors.white,
+    borderRadius: 15,
+    padding: 20,
+    marginBottom: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
+  },
+  cardLabel: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 5,
+  },
+  cardValue: {
+    fontSize: 16,
+    color: Colors.primary,
+    fontWeight: "600",
+  },
+  updateButton: {
     backgroundColor: Colors.primary,
+    borderRadius: 25,
+    paddingVertical: 15,
+    marginTop: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  btnText: {
+  updateButtonText: {
     color: Colors.white,
-    fontSize: 13,
-    fontWeight: "800",
-    textTransform: "uppercase",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  logoutButton: {
+    marginTop: 20,
+    paddingVertical: 10,
   },
   logoutText: {
-    color: "gray",
-    textAlign: "left",
-    marginTop: 25,
+    color: "#666",
+    fontSize: 16,
+    textAlign: "center",
   },
 });

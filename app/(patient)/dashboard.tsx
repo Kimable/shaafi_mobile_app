@@ -101,13 +101,13 @@ export default function PatientDashboard() {
           <DashboardCard
             title="How App Works"
             avatarIcon="alphabetical"
-            link="/ComingSoon"
+            link="/home/howAppWorks"
           />
 
           <DashboardCard
             title="Share Feedback"
             avatarIcon="message-reply"
-            link="/ComingSoon"
+            link="/home/ShareFeedback"
           />
         </View>
       </View>

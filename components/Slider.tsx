@@ -10,7 +10,6 @@ const blurhash =
 const Slider = () => {
   const width = Dimensions.get("window").width;
   return (
-    <View style={{ flex: 1 }}>
       <Carousel
         loop
         width={width}
@@ -20,18 +19,16 @@ const Slider = () => {
         data={[...data, ...data]}
         scrollAnimationDuration={1500}
         renderItem={({ item, index, animationValue }) => (
-          <View style={{ justifyContent: "center", borderRadius: 10 }}>
             <Image
-              style={{ borderRadius: 10, width: "100%", height: "100%" }}
+              style={styles.image}
               source={item.img}
               placeholder={blurhash}
               transition={1000}
-              contentFit="none"
+              contentFit='contain'
             />
-          </View>
+          
         )}
       />
-    </View>
   );
 };
 
@@ -45,8 +42,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   image: {
-    flex: 1,
     width: "100%",
-    backgroundColor: "#0553",
+    height: "100%",
   },
 });

@@ -1,203 +1,323 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   Text,
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  Button,
+  ActivityIndicator,
+  RefreshControl,
 } from "react-native";
-import globalStyles from "../../constants/GlobalStyles";
-import auth from "../../util/auth";
-import Colors from "../../constants/Colors";
 import { Link } from "expo-router";
+import Colors from "../../constants/Colors";
+import auth from "../../util/auth";
 
-const AppointmentList = () => {
-  const [data, setData]: any = useState([]);
+interface Doctor {
+  first_name: string;
+  doctor: {
+    specialty: string;
+  };
+}
 
-  useEffect(() => {
-    async function fetchData() {
-      const data = await auth("appointments");
-      if (data.status === 404) {
-        setData(data);
-      } else {
-        setData(data.appointments);
-      }
+interface Appointment {
+  id: number;
+  status: "waiting" | "completed" | "in_progress";
+  medical_issue: string;
+  date: string;
+  time: string;
+}
 
-      console.log(data.appointments);
-    }
-    fetchData();
-  }, []);
+interface AppointmentData {
+  appointment: Appointment;
+  doctor: Doctor | null;
+}
 
-  const getStatusStyles = (status: any) => {
-    switch (status) {
-      case "waiting":
-        return { backgroundColor: "orange" };
-      case "completed":
-        return { backgroundColor: "green" };
-      case "in_progress":
-        return { backgroundColor: "blue" };
-      default:
-        return { backgroundColor: "gray" };
-    }
+interface StatusBadgeProps {
+  status: Appointment["status"];
+}
+
+const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
+  const getStatusConfig = (status: Appointment["status"]) => {
+    const configs = {
+      waiting: {
+        color: "#FFB020",
+        backgroundColor: "rgba(255, 176, 32, 0.12)",
+        label: "Waiting",
+      },
+      completed: {
+        color: "#14B8A6",
+        backgroundColor: "rgba(20, 184, 166, 0.12)",
+        label: "Completed",
+      },
+      in_progress: {
+        color: "#2196F3",
+        backgroundColor: "rgba(33, 150, 243, 0.12)",
+        label: "In Progress",
+      },
+    };
+    return configs[status];
   };
 
-  const handleRefresh = async () => {
-    setData([]);
-    const data = await auth("appointments");
-    if (data.status === 404) {
-      setData(data);
-    } else {
-      setData(data.appointments);
-    }
-  };
-
-  const handleBookAppointment = () => {
-    console.log("book");
-  };
-
-  const renderAppointmentItem = ({ item }: any) => {
-    const statusStyles = getStatusStyles(item.appointment.status);
-
-    return (
-      <View style={styles.appointmentItem}>
-        <View style={[styles.statusButton, statusStyles]}>
-          <Text style={styles.statusButtonText}>{item.appointment.status}</Text>
-        </View>
-        <Text style={styles.appointmentDate}>
-          Medical Issue:{" "}
-          <Text style={globalStyles.boldText}>
-            {item.appointment.medical_issue}
-          </Text>
-        </Text>
-        <Text style={styles.appointmentDate}>
-          Date:{" "}
-          <Text style={globalStyles.boldText}>{item.appointment.date}</Text>
-        </Text>
-        <Text style={styles.appointmentTime}>
-          Time:{" "}
-          <Text style={globalStyles.boldText}>{item.appointment.time}</Text>
-        </Text>
-        <Text style={styles.appointmentDoctor}>
-          Doctor:{" "}
-          <Text style={globalStyles.boldText}>
-            {item.doctor !== null
-              ? "Dr." + item.doctor.first_name
-              : "Unspecified"}
-          </Text>
-        </Text>
-
-        <Text style={styles.appointmentDoctor}>
-          Specialty:{" "}
-          <Text style={globalStyles.boldText}>
-            {item.doctor !== null
-              ? item.doctor.doctor.specialty
-              : "Not Applicable"}
-          </Text>
-        </Text>
-      </View>
-    );
-  };
+  const config = getStatusConfig(status);
 
   return (
-    <>
-      <Text style={globalStyles.title}>Your Appointments</Text>
-      {data.length === 0 ? (
-        <Text style={globalStyles.loading}>Loading....</Text>
-      ) : data.status === 404 ? (
-        <>
-          <Text style={styles.error}>{data.errorMsg}</Text>
-          <View style={styles.container}>
-            <View style={styles.buttonContainer}>
-              <Link
-                replace
-                href="/(forms)/bookAppointment"
-                style={globalStyles.button}
-              >
-                <Text style={globalStyles.buttonText}>Book Appointment</Text>
-              </Link>
+    <View
+      style={[styles.statusBadge, { backgroundColor: config.backgroundColor }]}
+    >
+      <Text style={[styles.statusText, { color: config.color }]}>
+        {config.label}
+      </Text>
+    </View>
+  );
+};
 
-              <TouchableOpacity
-                style={globalStyles.secondaryButton}
-                onPress={() => handleRefresh()}
-              >
-                <Text style={globalStyles.buttonText}>Refresh</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </>
+const AppointmentCard: React.FC<{ item: AppointmentData }> = ({ item }) => (
+  <View style={styles.appointmentCard}>
+    <StatusBadge status={item.appointment.status} />
+
+    <View style={styles.appointmentInfo}>
+      <Text style={styles.medicalIssue}>{item.appointment.medical_issue}</Text>
+
+      <View style={styles.detailRow}>
+        <View style={styles.detailItem}>
+          <Text style={styles.detailLabel}>Date</Text>
+          <Text style={styles.detailValue}>{item.appointment.date}</Text>
+        </View>
+
+        <View style={styles.detailItem}>
+          <Text style={styles.detailLabel}>Time</Text>
+          <Text style={styles.detailValue}>{item.appointment.time}</Text>
+        </View>
+      </View>
+
+      <View style={styles.doctorInfo}>
+        <Text style={styles.detailLabel}>Doctor</Text>
+        <Text style={styles.detailValue}>
+          {item.doctor ? `Dr. ${item.doctor.first_name}` : "Unspecified"}
+        </Text>
+
+        <Text style={styles.detailLabel}>Specialty</Text>
+        <Text style={styles.detailValue}>
+          {item.doctor ? item.doctor.doctor.specialty : "Not Applicable"}
+        </Text>
+      </View>
+    </View>
+  </View>
+);
+
+const AppointmentList: React.FC = () => {
+  const [appointments, setAppointments] = useState<AppointmentData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchAppointments = async () => {
+    try {
+      const response = await auth("appointments");
+      if (response.status === 404) {
+        setError(response.errorMsg);
+        setAppointments([]);
+      } else {
+        setAppointments(response.appointments);
+        setError(null);
+      }
+    } catch (err) {
+      setError("Failed to fetch appointments");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAppointments();
+  }, []);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchAppointments().finally(() => setRefreshing(false));
+  }, []);
+
+  const ActionButtons = () => (
+    <View style={styles.actionButtons}>
+      <Link href="/(forms)/bookAppointment" asChild>
+        <TouchableOpacity style={styles.primaryButton}>
+          <Text style={styles.buttonText}>Book Appointment</Text>
+        </TouchableOpacity>
+      </Link>
+
+      <TouchableOpacity style={styles.secondaryButton} onPress={onRefresh}>
+        <Text style={styles.secondaryButtonText}>Refresh</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  if (isLoading) {
+    return (
+      <View style={styles.centerContainer}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Your Appointments</Text>
+
+      {error ? (
+        <View style={styles.centerContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+          <ActionButtons />
+        </View>
       ) : (
-        <>
-          <FlatList
-            data={data}
-            keyExtractor={(item) => item.appointment.id.toString()}
-            renderItem={renderAppointmentItem}
-          />
-          <View style={styles.container}>
-            <View style={styles.buttonContainer}>
-              <Link href="/(forms)/bookAppointment" style={globalStyles.button}>
-                <Text style={globalStyles.buttonText}>Book Appointment</Text>
-              </Link>
-
-              <TouchableOpacity
-                style={globalStyles.secondaryButton}
-                onPress={() => handleRefresh()}
-              >
-                <Text style={globalStyles.buttonText}>Refresh</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </>
+        <FlatList
+          data={appointments}
+          keyExtractor={(item) => item.appointment.id.toString()}
+          renderItem={({ item }) => <AppointmentCard item={item} />}
+          contentContainerStyle={styles.listContainer}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          ListFooterComponent={ActionButtons}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>No appointments found</Text>
+          }
+        />
       )}
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  appointmentItem: {
-    borderRadius: 10,
-    padding: 15,
-    marginVertical: 10,
-    backgroundColor: "#fafaff",
-    marginHorizontal: 12,
-  },
-  statusButton: {
-    padding: 5,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  statusButtonText: {
-    fontSize: 12,
-    color: "white",
-    textAlign: "center",
-    textTransform: "uppercase",
-  },
-  appointmentDate: {
-    fontSize: 16,
-  },
-  appointmentTime: {
-    fontSize: 14,
-  },
-  appointmentDoctor: {
-    fontSize: 14,
-  },
-
-  error: {
-    fontSize: 18,
-    fontWeight: "700",
-    textAlign: "center",
-    color: Colors.secondary,
-  },
   container: {
+    flex: 1,
+    backgroundColor: "#f5f5f7",
+  },
+  centerContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: Colors.secondary,
+    padding: 20,
+    paddingBottom: 10,
+  },
+  listContainer: {
+    padding: 16,
+    paddingTop: 8,
+  },
+  appointmentCard: {
+    backgroundColor: "white",
+    borderRadius: 16,
+    marginBottom: 16,
+    padding: 16,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  statusBadge: {
+    alignSelf: "flex-start",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
     marginBottom: 12,
   },
-  buttonContainer: {
+  statusText: {
+    fontSize: 12,
+    fontWeight: "600",
+  },
+  appointmentInfo: {
+    gap: 12,
+  },
+  medicalIssue: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: Colors.secondary,
+    marginBottom: 8,
+  },
+  detailRow: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    width: "60%",
-    marginTop: 13,
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+  detailItem: {
+    flex: 1,
+  },
+  detailLabel: {
+    fontSize: 12,
+    color: "#666",
+    marginBottom: 4,
+  },
+  detailValue: {
+    fontSize: 15,
+    color: Colors.secondary,
+    fontWeight: "500",
+  },
+  doctorInfo: {
+    borderTopWidth: 1,
+    borderTopColor: "#eee",
+    paddingTop: 12,
+    marginTop: 4,
+  },
+  actionButtons: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 12,
+    padding: 16,
+  },
+  primaryButton: {
+    backgroundColor: Colors.primary,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 25,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  },
+  secondaryButton: {
+    backgroundColor: "transparent",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: Colors.primary,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  secondaryButtonText: {
+    color: Colors.primary,
+    fontSize: 14,
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  errorText: {
+    fontSize: 16,
+    color: Colors.secondary,
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  emptyText: {
+    textAlign: "center",
+    color: "#666",
+    fontSize: 16,
+    marginTop: 20,
   },
 });
 

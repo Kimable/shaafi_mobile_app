@@ -7,6 +7,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import Colors from "../../constants/Colors";
 import globalStyle from "../../constants/GlobalStyles";
@@ -32,12 +33,13 @@ const login = () => {
       // Login successful!
       let data = await response.json();
       await AsyncStorage.setItem("token", data.token);
+      Alert.alert("Success", "Login successful!");
       router.replace("/home/");
     } else if (response.status === 401) {
       let data = await response.json();
-      alert(data.errorMsg);
+      Alert.alert("Errror", data.errorMsg);
     } else {
-      alert("Something went wrong! Please try again.");
+      Alert.alert("Errror", "Something went wrong! Please try again.");
     }
   };
 
