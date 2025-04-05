@@ -20,6 +20,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
 import globalStyles from "../../constants/GlobalStyles";
+import i18n from "../i18n";
 
 const onlineConsultation = () => {
   // Fetch and set Doctors
@@ -119,11 +120,11 @@ const onlineConsultation = () => {
             <Text
               style={[globalStyle.title, { color: "#fff", marginBottom: 20 }]}
             >
-              Book A Video Consultation
+              {i18n.t("Book A Video Consultation")}
             </Text>
             {/* Calender */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Select Date</Text>
+              <Text style={styles.label}>{i18n.t("Select Date")}</Text>
               <CalendarPicker
                 // Basic settings
                 onDateChange={onDateChange}
@@ -184,7 +185,7 @@ const onlineConsultation = () => {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Time</Text>
+              <Text style={styles.label}>{i18n.t("Time")}</Text>
               <TextInput
                 style={styles.input}
                 placeholder="HH:MM AM/PM"
@@ -194,14 +195,14 @@ const onlineConsultation = () => {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Preferred Doctor</Text>
+              <Text style={styles.label}>{i18n.t("Preferred Doctor")}</Text>
               <View style={styles.pickerContainer}>
                 <Picker
                   style={styles.picker}
                   selectedValue={doctor}
                   onValueChange={setDoctor}
                 >
-                  <Picker.Item label="Select Doctor" value="" />
+                  <Picker.Item label={i18n.t("Select Doctor")} value="" />
                   {doctors.map((doctor: any) => (
                     <Picker.Item
                       key={doctor.user.id}
@@ -214,12 +215,14 @@ const onlineConsultation = () => {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Medical Issue</Text>
+              <Text style={styles.label}>{i18n.t("Medical Concern")}</Text>
               <TextInput
                 style={[styles.input, styles.description]}
                 multiline
                 numberOfLines={4}
-                placeholder="Provide more details about your medical concern"
+                placeholder={i18n.t(
+                  "Provide more details about your medical concern"
+                )}
                 value={medicalIssue}
                 onChangeText={setMedicalIssue}
               />
@@ -228,7 +231,9 @@ const onlineConsultation = () => {
               style={styles.submitButton}
               onPress={handleSubmit}
             >
-              <Text style={globalStyle.buttonText}>Book Consultation</Text>
+              <Text style={globalStyle.buttonText}>
+                {i18n.t("Book Consultation")}
+              </Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

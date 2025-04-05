@@ -4,11 +4,12 @@ import globalStyles from "../../constants/GlobalStyles";
 import Colors from "../../constants/Colors";
 import { Avatar } from "react-native-paper";
 import { Link } from "expo-router";
+import i18n from "../i18n";
 
 const emergency = () => {
   return (
     <View style={globalStyles.container}>
-      <Text style={globalStyles.title}>Emergency Information</Text>
+      <Text style={globalStyles.title}>{i18n.t("Emergency Information")}</Text>
 
       <TouchableOpacity style={{ marginTop: 12 }}>
         <View style={styles.card}>
@@ -32,7 +33,7 @@ const emergency = () => {
             size={27}
             style={{ backgroundColor: Colors.primary }}
           />
-          <Text style={styles.emergencyNo}>Get Directions</Text>
+          <Text style={styles.emergencyNo}>{i18n.t("Get Directions")}</Text>
         </View>
       </Link>
     </View>

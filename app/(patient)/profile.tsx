@@ -17,6 +17,7 @@ import auth from "../../util/auth";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { MaterialIcons } from "@expo/vector-icons";
+import i18n from "../i18n";
 
 interface ProfileData {
   first_name: string;
@@ -42,7 +43,6 @@ export default function PatientProfile() {
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const redirect = useRouter();
 
   const fetchProfileData = async () => {
     try {
@@ -62,7 +62,7 @@ export default function PatientProfile() {
   const handleLogout = async () => {
     try {
       await AsyncStorage.setItem("token", "");
-      redirect.replace("/");
+      return router.dismissTo("/");
     } catch (error) {
       console.error("Error during logout:", error);
     }
@@ -75,7 +75,7 @@ export default function PatientProfile() {
     if (status !== "granted") {
       Alert.alert(
         "Permission Required",
-        "Sorry, we need camera roll permissions to make this work!"
+        "Sorry, we need camera roll permissions for this to work!"
       );
       return;
     }
@@ -169,20 +169,24 @@ export default function PatientProfile() {
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.sectionTitle}>Personal Information</Text>
+        <Text style={styles.sectionTitle}>
+          {i18n.t("Personal Information")}
+        </Text>
 
-        <InfoCard label="Email" value={profileData?.email || ""} />
+        <InfoCard label={i18n.t("Email")} value={profileData?.email || ""} />
 
-        <InfoCard label="Phone" value={profileData?.phone || ""} />
+        <InfoCard label={i18n.t("Phone")} value={profileData?.phone || ""} />
 
         <Link href="/(forms)/updateProfile" asChild>
           <TouchableOpacity style={styles.updateButton}>
-            <Text style={styles.updateButtonText}>Update Profile</Text>
+            <Text style={styles.updateButtonText}>
+              {i18n.t("Update Profile")}
+            </Text>
           </TouchableOpacity>
         </Link>
 
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutText}>Logout</Text>
+          <Text style={styles.logoutText}>{i18n.t("Logout")}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

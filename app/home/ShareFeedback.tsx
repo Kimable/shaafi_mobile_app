@@ -13,6 +13,7 @@ import { Text } from "react-native";
 import Colors from "../../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { url } from "../../util/url";
+import i18n from "../i18n";
 
 const ShareFeedbackScreen = () => {
   const [feedbackType, setFeedbackType] = useState("");
@@ -21,24 +22,24 @@ const ShareFeedbackScreen = () => {
   const [department, setDepartment] = useState("");
 
   const feedbackTypes = [
-    "General Experience",
-    "Doctor Consultation",
-    "Video Consultation",
-    "Appointment Booking",
-    "App Usage",
-    "Emergency Services",
+    i18n.t("General Experience"),
+    i18n.t("Doctor Consultation"),
+    i18n.t("Video Consultation"),
+    i18n.t("Appointment Booking"),
+    i18n.t("App Usage"),
+    i18n.t("Emergency Services"),
   ];
 
   const departments = [
-    "General Medicine",
-    "Pediatrics",
-    "Cardiology",
-    "Orthopedics",
-    "Emergency",
-    "Gynecology",
-    "Dermatology",
-    "Ophthalmology",
-    "Other",
+    i18n.t("General Medicine"),
+    i18n.t("Pediatrics"),
+    i18n.t("Cardiology"),
+    i18n.t("Orthopedics"),
+    i18n.t("Emergency"),
+    i18n.t("Gynecology"),
+    i18n.t("Dermatology"),
+    i18n.t("Ophthalmology"),
+    i18n.t("Other"),
   ];
 
   const handleSubmit = async () => {
@@ -120,14 +121,14 @@ const ShareFeedbackScreen = () => {
     >
       <ScrollView style={styles.scrollView}>
         <View style={styles.header}>
-          <Text style={styles.title}>Share Your Feedback</Text>
+          <Text style={styles.title}>{i18n.t("Share Your Feedback")}</Text>
           <Text style={styles.subtitle}>
-            Help us improve our services by sharing your experience
+            {i18n.t("Help us improve our services by sharing your experience")}
           </Text>
         </View>
 
         <View style={styles.form}>
-          <Text style={styles.label}>Type of Feedback*</Text>
+          <Text style={styles.label}>{i18n.t("Type of Feedback")}*</Text>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -154,7 +155,7 @@ const ShareFeedbackScreen = () => {
             ))}
           </ScrollView>
 
-          <Text style={styles.label}>Department (Optional)</Text>
+          <Text style={styles.label}>{i18n.t("Department (Optional)")}</Text>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -181,25 +182,27 @@ const ShareFeedbackScreen = () => {
             ))}
           </ScrollView>
 
-          <Text style={styles.label}>Rate Your Experience*</Text>
+          <Text style={styles.label}>{i18n.t("Rate Your Experience")}*</Text>
           <RatingStars />
 
-          <Text style={styles.label}>Your Feedback*</Text>
+          <Text style={styles.label}>{i18n.t("Your Feedback")}*</Text>
           <TextInput
             style={styles.textArea}
             multiline
             numberOfLines={6}
-            placeholder="Please share your experience, suggestions, or concerns..."
+            placeholder={i18n.t("shareExperience")}
             value={comment}
             onChangeText={setComment}
             textAlignVertical="top"
           />
 
           <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-            <Text style={styles.submitButtonText}>Submit Feedback</Text>
+            <Text style={styles.submitButtonText}>
+              {i18n.t("Submit Feedback")}
+            </Text>
           </TouchableOpacity>
 
-          <Text style={styles.note}>* Required fields</Text>
+          <Text style={styles.note}>* {i18n.t("Required fields")}</Text>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

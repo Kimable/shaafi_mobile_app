@@ -7,6 +7,7 @@ import {
   ThemeProvider,
   MD3LightTheme as DefaultTheme,
 } from "react-native-paper";
+import i18n from "./i18n";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -63,7 +64,7 @@ function RootLayoutNav() {
         <Stack.Screen
           name="index"
           options={{
-            title: "Welcome",
+            title: i18n.t("Welcome"),
             headerStyle: { backgroundColor: Colors.tertiary },
             headerTintColor: Colors.white,
             headerShown: true,

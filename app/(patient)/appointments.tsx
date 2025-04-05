@@ -11,6 +11,7 @@ import {
 import { Link } from "expo-router";
 import Colors from "../../constants/Colors";
 import auth from "../../util/auth";
+import i18n from "../i18n";
 
 interface Doctor {
   first_name: string;
@@ -80,25 +81,27 @@ const AppointmentCard: React.FC<{ item: AppointmentData }> = ({ item }) => (
 
       <View style={styles.detailRow}>
         <View style={styles.detailItem}>
-          <Text style={styles.detailLabel}>Date</Text>
+          <Text style={styles.detailLabel}>{i18n.t("Date")}</Text>
           <Text style={styles.detailValue}>{item.appointment.date}</Text>
         </View>
 
         <View style={styles.detailItem}>
-          <Text style={styles.detailLabel}>Time</Text>
+          <Text style={styles.detailLabel}>{i18n.t("Time")}</Text>
           <Text style={styles.detailValue}>{item.appointment.time}</Text>
         </View>
       </View>
 
       <View style={styles.doctorInfo}>
-        <Text style={styles.detailLabel}>Doctor</Text>
+        <Text style={styles.detailLabel}>{i18n.t("Doctor")}</Text>
         <Text style={styles.detailValue}>
           {item.doctor ? `Dr. ${item.doctor.first_name}` : "Unspecified"}
         </Text>
 
-        <Text style={styles.detailLabel}>Specialty</Text>
+        <Text style={styles.detailLabel}>{i18n.t("Specialty")}</Text>
         <Text style={styles.detailValue}>
-          {item.doctor ? item.doctor.doctor.specialty : "Not Applicable"}
+          {item.doctor
+            ? i18n.t(`${item.doctor.doctor.specialty}`)
+            : i18n.t("Not Applicable")}
         </Text>
       </View>
     </View>
@@ -141,12 +144,12 @@ const AppointmentList: React.FC = () => {
     <View style={styles.actionButtons}>
       <Link href="/(forms)/bookAppointment" asChild>
         <TouchableOpacity style={styles.primaryButton}>
-          <Text style={styles.buttonText}>Book Appointment</Text>
+          <Text style={styles.buttonText}>{i18n.t("Book Appointment")}</Text>
         </TouchableOpacity>
       </Link>
 
       <TouchableOpacity style={styles.secondaryButton} onPress={onRefresh}>
-        <Text style={styles.secondaryButtonText}>Refresh</Text>
+        <Text style={styles.secondaryButtonText}>{i18n.t("Refresh")}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -161,7 +164,7 @@ const AppointmentList: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Your Appointments</Text>
+      <Text style={styles.title}>{i18n.t("Your Appointments")}</Text>
 
       {error ? (
         <View style={styles.centerContainer}>
@@ -179,7 +182,9 @@ const AppointmentList: React.FC = () => {
           }
           ListFooterComponent={ActionButtons}
           ListEmptyComponent={
-            <Text style={styles.emptyText}>No appointments found</Text>
+            <Text style={styles.emptyText}>
+              {i18n.t("No appointments found")}
+            </Text>
           }
         />
       )}

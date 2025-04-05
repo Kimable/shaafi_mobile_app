@@ -1,53 +1,50 @@
 import React from "react";
 import { ScrollView, View, StyleSheet } from "react-native";
 import { Text } from "react-native";
+import i18n from "../i18n";
 
 const HowAppWorksScreen = () => {
   const features = [
     {
-      title: "Book Appointments",
-      description:
-        "Schedule in-person consultations with our qualified doctors. Choose your preferred doctor, date, and time slot. Get instant confirmation.",
+      title: i18n.t("Book Appointments"),
+      description: i18n.t("scheduleInPerson"),
       steps: [
-        "Browse through our list of specialists",
-        "Select your preferred date and available time slot",
-        "Fill in your medical concern briefly",
-        "Confirm your booking with one tap",
-        "Receive booking confirmation via email",
+        i18n.t("Browse through our list of specialists"),
+        i18n.t("Select your preferred date and available time slot"),
+        i18n.t("Fill in your medical concern briefly"),
+        i18n.t("Confirm your booking with one tap"),
+        i18n.t("Receive booking confirmation via email"),
       ],
     },
     {
-      title: "Video Consultations",
-      description:
-        "Connect with doctors from the comfort of your home through secure video calls.",
+      title: i18n.t("Video Consultations"),
+      description: i18n.t("Connect with doctors from the comfort of your home through secure video calls"),
       steps: [
-        "Choose 'Video Consultation' option",
-        "Select specialist, date, time",
-        "Receive booking confirmation via email",
-        "Make payments online",
-        "Receive video call link before appointment",
-        "Join the call at scheduled time",
+        i18n.t("Choose 'Video Consultation' option"),
+        i18n.t("Select specialist, date, time"),
+        i18n.t("Receive booking confirmation via email"),
+        i18n.t("Make payments online"),
+        i18n.t("Receive video call link before appointment"),
+        i18n.t("Join the call at scheduled time"),
       ],
     },
     {
-      title: "Emergency Services",
-      description:
-        "Quick access to emergency services with real-time ambulance tracking.",
+      title: i18n.t("Emergency Services"),
+      description: i18n.t("Quick access to emergency services with real-time ambulance tracking"),
       steps: [
-        "Tap the emergency button on home screen",
-        "Tap our emergency number and call directly",
-        "Or tap the maps icon to find nearest hospital",
+        i18n.t("Tap the emergency button on home screen"),
+        i18n.t("Tap our emergency number and call directly"),
+        i18n.t("Or tap the maps icon to find nearest hospital"),
       ],
     },
     {
-      title: "Profile Management",
-      description:
-        "Keep your medical history and personal information up to date.",
+      title: i18n.t("Profile Management"),
+      description: i18n.t("Keep your medical history and personal information up to date"),
       steps: [
-        "Update personal information",
-        "Upload medical records",
-        "View appointment history",
-        "Access medical reports",
+        i18n.t("Update personal information"),
+        i18n.t("Upload medical records"),
+        i18n.t("View appointment history"),
+        i18n.t("Access medical reports"),
       ],
     },
   ];
@@ -56,7 +53,7 @@ const HowAppWorksScreen = () => {
     <View style={styles.card}>
       <Text style={styles.cardTitle}>{feature.title}</Text>
       <Text style={styles.cardDescription}>{feature.description}</Text>
-      <Text style={styles.stepsTitle}>How to use:</Text>
+      <Text style={styles.stepsTitle}>{i18n.t("How to use")}:</Text>
       {feature.steps.map((step: any, index: any) => (
         <View key={index} style={styles.stepContainer}>
           <Text style={styles.stepNumber}>{index + 1}.</Text>
@@ -69,10 +66,11 @@ const HowAppWorksScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>How Shaafi Hospital App Works</Text>
+        <Text style={styles.title}>
+          {i18n.t("How Shaafi Hospital App Works")}
+        </Text>
         <Text style={styles.subtitle}>
-          Your healthcare companion for easy appointment booking, video
-          consultations, and emergency services
+          {i18n.t("Your healthcare companion for easy appointment booking, video consultations, and emergency services")}
         </Text>
       </View>
 
@@ -82,7 +80,7 @@ const HowAppWorksScreen = () => {
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>
-          Need help? Contact our 24/7 support at support@shaafihospital.so
+          {i18n.t("needHelp")}
         </Text>
       </View>
     </ScrollView>

@@ -9,12 +9,12 @@ import {
   RefreshControl,
   Alert,
 } from "react-native";
-import { Image } from "expo-image";
-import { Link } from "expo-router";
 import Colors from "../../constants/Colors";
 import { url } from "../../util/url";
 import auth from "../../util/auth";
 import { Feather, Ionicons } from "@expo/vector-icons";
+import FileDownloadLink from "../../components/FileDownloadLink";
+import i18n from "../i18n";
 
 interface HealthRecord {
   id: string;
@@ -80,12 +80,13 @@ const RecordCard: React.FC<{
       {record.description}
     </Text>
 
-    {record.fileUrl && (
-      <TouchableOpacity style={styles.downloadButton}>
-        <Feather name="download" size={16} color={Colors.primary} />
-        <Text style={styles.downloadText}>Download</Text>
-      </TouchableOpacity>
-    )}
+    <TouchableOpacity style={styles.downloadButton}>
+      <Feather name="download" size={20} color={Colors.primary} />
+      <FileDownloadLink
+        url={`${url}/health-record/${record.id}`}
+        filename={`${record.title}.pdf`}
+      />
+    </TouchableOpacity>
   </TouchableOpacity>
 );
 
@@ -135,22 +136,22 @@ const HealthRecordsScreen: React.FC = () => {
     {
       id: "all",
       icon: <Feather name="activity" size={24} color={Colors.primary} />,
-      title: "All Records",
+      title: i18n.t("All Records"),
     },
     {
       id: "lab_result",
       icon: <Ionicons name="flask" size={24} color={Colors.primary} />,
-      title: "Lab Results",
+      title: i18n.t("Lab Results"),
     },
     {
       id: "medical_report",
       icon: <Feather name="file-text" size={24} color={Colors.primary} />,
-      title: "Reports",
+      title: i18n.t("Reports"),
     },
     {
       id: "prescription",
       icon: <Feather name="file-plus" size={24} color={Colors.primary} />,
-      title: "Prescriptions",
+      title: i18n.t("Prescriptions"),
     },
   ];
 
@@ -211,7 +212,7 @@ const HealthRecordsScreen: React.FC = () => {
       >
         <View style={styles.recordsList}>
           {filteredRecords.length === 0 ? (
-            <Text style={styles.emptyText}>No reccords found</Text>
+            <Text style={styles.emptyText}>{i18n.t("No records found")}</Text>
           ) : (
             filteredRecords.map((record) => (
               <RecordCard

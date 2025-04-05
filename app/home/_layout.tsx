@@ -2,6 +2,7 @@ import { Link, Stack } from "expo-router";
 import Colors from "../../constants/Colors";
 import { Pressable } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
+import i18n from "../i18n";
 
 export default function HomeLayoutNav() {
   return (
@@ -9,7 +10,7 @@ export default function HomeLayoutNav() {
       <Stack.Screen
         name="index"
         options={{
-          title: "Home",
+          title: i18n.t("Home"),
           headerStyle: { backgroundColor: Colors.tertiary },
           headerTintColor: Colors.white,
           headerShown: true,

@@ -11,6 +11,7 @@ import Colors from "../../constants/Colors";
 import { Link, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { url } from "../../util/url";
+import i18n from "../i18n";
 
 const registration = () => {
   const router = useRouter();
@@ -71,7 +72,7 @@ const registration = () => {
   return (
     <View style={styles.container}>
       <View style={styles.form}>
-        <Text style={styles.title}>Register</Text>
+        <Text style={styles.title}>{i18n.t("Register")}</Text>
         <TextInput
           style={styles.input}
           placeholder="First Name"
@@ -99,7 +100,7 @@ const registration = () => {
           onChangeText={setPassword}
         />
         <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>Register</Text>
+          <Text style={styles.buttonText}>{i18n.t("Register")}</Text>
         </TouchableOpacity>
         <Link style={styles.text} href="/login">
           <Text>Already registered? Login Here</Text>

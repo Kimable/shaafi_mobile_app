@@ -5,6 +5,7 @@ import { Fontisto } from "@expo/vector-icons";
 
 import Colors from "../../constants/Colors";
 import { Avatar } from "react-native-paper";
+import i18n from "../i18n";
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof EvilIcons>["name"];
@@ -28,7 +29,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="dashboard"
         options={{
-          title: "Dashboard",
+          title: i18n.t("Dashboard"),
           tabBarIcon: ({ color }) => <TabBarIcon name="chart" color={color} />,
         }}
       />
@@ -36,7 +37,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="appointments"
         options={{
-          title: "Appointments",
+          title: i18n.t("Appointments"),
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="calendar" color={color} />
           ),
@@ -46,7 +47,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="emergency"
         options={{
-          title: "Emergency",
+          title: i18n.t("Emergency"),
           tabBarIcon: ({ color }) => (
             <Avatar.Icon
               icon="ambulance"
@@ -61,7 +62,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="health_records"
         options={{
-          title: "Health Records",
+          title: i18n.t("Health Records"),
           tabBarIcon: ({ color }) => (
             <Avatar.Icon
               icon="file-multiple"
@@ -76,7 +77,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
+          title: i18n.t("Profile"),
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         }}
       />

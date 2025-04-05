@@ -12,6 +12,7 @@ import {
 import Colors from "../../constants/Colors";
 import globalStyle from "../../constants/GlobalStyles";
 import { url } from "../../util/url";
+import i18n from "../i18n";
 
 const login = () => {
   const [email, setEmail] = useState("");
@@ -46,7 +47,7 @@ const login = () => {
   return (
     <View style={styles.container}>
       <View style={globalStyle.form}>
-        <Text style={globalStyle.title}>Login to Continue</Text>
+        <Text style={globalStyle.title}>{i18n.t("Login to Continue")}</Text>
         <TextInput
           onChangeText={setEmail}
           style={globalStyle.input}
@@ -59,7 +60,7 @@ const login = () => {
           placeholder="Password"
         />
         <TouchableOpacity style={globalStyle.button} onPress={handleSubmit}>
-          <Text style={globalStyle.buttonText}>Login</Text>
+          <Text style={globalStyle.buttonText}>{i18n.t("Login")}</Text>
         </TouchableOpacity>
         <Link style={styles.text} href="/registration">
           <Text>Not registered? Register Here</Text>

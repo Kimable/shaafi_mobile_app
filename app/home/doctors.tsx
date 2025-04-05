@@ -14,6 +14,7 @@ import { url } from "../../util/url";
 import axios from "axios";
 import Colors from "../../constants/Colors";
 import { Link } from "expo-router";
+import i18n from "../i18n";
 
 const Doctors = () => {
   const [doctors, setDoctors] = useState([]);
@@ -40,7 +41,7 @@ const Doctors = () => {
         <Text style={styles.name}>
           Dr. {item.user.first_name} {item.user.last_name}
         </Text>
-        <Text style={styles.specialty}>{item.specialty}</Text>
+        <Text style={styles.specialty}>{i18n.t(`${item.specialty}`)}</Text>
         <Link href={`/home/singleDoctor/${item.user.id}`} asChild>
           <TouchableOpacity
             onPress={() => handleBookAppointment(item.user.id)}
@@ -52,7 +53,7 @@ const Doctors = () => {
                 { fontSize: 10, color: "white", fontWeight: "bold" })
               }
             >
-              Book Appointment
+              {i18n.t("Book Appointment")}
             </Text>
           </TouchableOpacity>
         </Link>
@@ -62,7 +63,7 @@ const Doctors = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={globalStyles.title}>Our Expert Doctors</Text>
+      <Text style={globalStyles.title}>{i18n.t("Our Expert Doctors")}</Text>
       {doctors.length === 0 ? (
         <View style={globalStyles.centerContainer}>
           <ActivityIndicator size="large" color={Colors.primary} />

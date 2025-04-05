@@ -9,40 +9,56 @@ import globalStyles from "../constants/GlobalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
+// Language Translation
+import { I18nManager } from "react-native";
+import i18n from "./i18n";
+import LangSelection from "../components/LangSelection";
+
 const LandingScreen = () => {
-  const [token, setToken] = useState<any | null>("");
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const isRTL = i18n.locale === "ar";
+    if (I18nManager.isRTL !== isRTL) {
+      I18nManager.forceRTL(isRTL);
+      // You may need to reload the app here to apply RTL correctly
+    }
+  }, [i18n.locale]);
 
   useEffect(() => {
     const isLoggedIn = async () => {
-      let tkn = await AsyncStorage.getItem("token");
-      setToken(tkn);
-      console.log(token);
+      try {
+        let tkn = await AsyncStorage.getItem("token");
+        setToken(tkn);
+        console.log(tkn);
+      } catch (error) {
+        console.error("Failed to fetch token:", error);
+        setToken(null);
+      }
     };
     isLoggedIn();
-  }, [token]);
+  }, []);
 
-  return token === "" || token === null ? (
-    <GetStartedScreen />
-  ) : (
-    <Redirect href="/home" />
-  );
+  return !token ? <GetStartedScreen /> : <Redirect href="/home" />;
 };
+
 export default LandingScreen;
 
 const GetStartedScreen = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={[globalStyles.container, styles.container]}>
+        <LangSelection />
         <View style={styles.imgContainer}>
           <Image style={styles.image} source={logo} />
         </View>
         <View style={styles.container}>
           <Text style={{ color: Colors.secondary, fontWeight: "bold" }}>
-            Experience exceptional healthcare!
+            {i18n.t("Experience exceptional healthcare!")}
           </Text>
           <Link href="/(forms)/login" style={styles.btn} asChild>
             <Pressable>
-              <Text style={styles.btnText}>Login to Continue</Text>
+              <Text style={styles.btnText}>{i18n.t("Login to Continue")}</Text>
             </Pressable>
           </Link>
         </View>

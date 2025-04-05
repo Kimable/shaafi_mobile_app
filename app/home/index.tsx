@@ -19,6 +19,10 @@ import { Link, Redirect, router, useRouter } from "expo-router";
 import Slider from "../../components/Slider";
 import BottomBar from "../../components/BottomBar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import LangSelection from "../../components/LangSelection";
+
+import i18n from "../i18n";
+import CompactLanguageSelector from "../../components/CompactLangSelector";
 
 interface ApiData {
   first_name: string;
@@ -61,20 +65,21 @@ const index = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ScrollView>
+        <CompactLanguageSelector />
         <View style={styles.bodyContent}>
-          <Text style={styles.subtitle}>Good {timeOfDay},</Text>
+          <Text style={styles.subtitle}>{i18n.t(`Good ${timeOfDay}`)},</Text>
 
           <Text variant="titleLarge" style={styles.name}>
             {data?.first_name} {data?.last_name}
           </Text>
-          <Text variant="bodyMedium">How are you feeling today?</Text>
+          <Text variant="bodyMedium">{i18n.t("feeling")}</Text>
 
           <View style={[globalStyles.card, { marginTop: 20 }]}>
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
               <Text style={{ fontWeight: "700" }}>
-                Book An Online Appointment
+                {i18n.t("Book An Online Appointment")}
               </Text>
               <Avatar.Icon
                 icon="calendar"
@@ -84,7 +89,9 @@ const index = () => {
             </View>
             <Link href="/(forms)/bookAppointment" asChild>
               <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Book Appointment</Text>
+                <Text style={styles.buttonText}>
+                  {i18n.t("Book Appointment")}
+                </Text>
               </TouchableOpacity>
             </Link>
           </View>
@@ -100,7 +107,7 @@ const index = () => {
               </Link>
               <Link href="/home/doctors">
                 <Text style={[styles.subtitle, { color: Colors.tertiary }]}>
-                  Find A Doctor
+                  {i18n.t("Find A Doctor")}
                 </Text>
               </Link>
             </View>
@@ -113,7 +120,7 @@ const index = () => {
                 />
               </Link>
               <Text style={[styles.subtitle, { color: Colors.tertiary }]}>
-                Video Consult
+                {i18n.t("Video Consult")}
               </Text>
             </View>
 
@@ -126,7 +133,7 @@ const index = () => {
                 />
               </Link>
               <Text style={[styles.subtitle, { color: Colors.tertiary }]}>
-                Emergency
+                {i18n.t("Emergency")}
               </Text>
             </View>
             <View style={[globalStyles.card, styles.card]}>
@@ -138,7 +145,7 @@ const index = () => {
                 />
               </Link>
               <Text style={[styles.subtitle, { color: Colors.tertiary }]}>
-                Dashboard
+                {i18n.t("Dashboard")}
               </Text>
             </View>
           </View>
@@ -153,7 +160,7 @@ const index = () => {
                 color: Colors.secondary,
               }}
             >
-              Home Healthcare Services
+              {i18n.t("Home Healthcare Services")}
             </Text>
             <Slider />
           </View>

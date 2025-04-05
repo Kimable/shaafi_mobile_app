@@ -21,6 +21,7 @@ import axios from "axios";
 import Colors from "../../../constants/Colors";
 import { useLocalSearchParams } from "expo-router";
 import { EvilIcons } from "@expo/vector-icons";
+import i18n from "../../i18n";
 
 interface Doctor {
   id: number;
@@ -143,7 +144,7 @@ const SingleDoctor = () => {
     <ScrollView>
       <View style={styles.container}>
         <Text style={globalStyles.title}>
-          Book Appointment with this Doctor
+          {i18n.t("Book Appointment With This Doctor")}
         </Text>
         <View style={styles.doctorItem}>
           <Image source={`${url}/${doctor.avatar}`} style={styles.avatar} />
@@ -158,7 +159,9 @@ const SingleDoctor = () => {
         {/* Appointment form */}
         <View style={styles.formContainer}>
           {/* Calender */}
-          <Text style={[styles.label, { marginBottom: 5 }]}>Select Date:</Text>
+          <Text style={[styles.label, { marginBottom: 5 }]}>
+            {i18n.t("Select Date")}:
+          </Text>
           <View>
             <CalendarPicker
               // Basic settings
@@ -220,7 +223,7 @@ const SingleDoctor = () => {
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Time</Text>
+            <Text style={styles.label}>{i18n.t("Time")}</Text>
             <TextInput
               style={styles.input}
               placeholder="HH:MM AM/PM"
@@ -230,38 +233,39 @@ const SingleDoctor = () => {
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Gender</Text>
+            <Text style={styles.label}>{i18n.t("Gender")}</Text>
             <View style={styles.pickerContainer}>
               <Picker
                 style={styles.picker}
                 selectedValue={gender}
                 onValueChange={setGender}
               >
-                <Picker.Item label="Select Gender" value="" />
-                <Picker.Item label="Male" value="male" />
-                <Picker.Item label="Female" value="female" />
-                <Picker.Item label="Other" value="other" />
+                <Picker.Item label={i18n.t("Select Gender")} value="" />
+                <Picker.Item label={i18n.t("Male")} value="Male" />
+                <Picker.Item label={i18n.t("Female")} value="Female" />
               </Picker>
             </View>
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Medical Concern</Text>
+            <Text style={styles.label}>{i18n.t("Medical Concern")}</Text>
             <TextInput
               style={styles.input}
-              placeholder="Brief medical concern"
+              placeholder={i18n.t("Brief medical concern")}
               value={medicalConcern}
               onChangeText={setMedicalConcern}
             />
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Description</Text>
+            <Text style={styles.label}>{i18n.t("Description")}</Text>
             <TextInput
               style={[styles.input, styles.description]}
               multiline
               numberOfLines={4}
-              placeholder="Provide more details about your medical concern"
+              placeholder={i18n.t(
+                "Provide more details about your medical concern"
+              )}
               value={description}
               onChangeText={setDescription}
             />
@@ -271,7 +275,9 @@ const SingleDoctor = () => {
             style={styles.submitButton}
             onPress={handleAppointmentSubmit}
           >
-            <Text style={styles.submitButtonText}>Submit Appointment</Text>
+            <Text style={styles.submitButtonText}>
+              {i18n.t("Submit Appointment")}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

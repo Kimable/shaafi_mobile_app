@@ -2,7 +2,7 @@
   "expo": {
     "name": "Shaafi Hospital",
     "slug": "shaafi-hospital",
-    "version": "1.0.9",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -14,10 +14,16 @@
       "resizeMode": "contain",
       "backgroundColor": "#00a551"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.kkimani.shaafihospital"
+      "bundleIdentifier": "com.kkimani.shaafihospital",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "This app uses the photo library to upload images",
+        "NSPhotoLibraryAddUsageDescription": "This app uses the photo library to upload images"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -25,14 +31,18 @@
         "backgroundColor": "#fff"
       },
       "package": "com.kkimani.shaafihospital",
-      "versionCode": 9
+      "versionCode": 11
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/logo-shaafi-transparent.png"
     },
-    "plugins": ["expo-router", "expo-font"],
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-localization"
+    ],
     "experiments": {
       "typedRoutes": true
     },

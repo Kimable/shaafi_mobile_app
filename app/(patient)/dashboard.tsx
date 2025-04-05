@@ -1,13 +1,18 @@
-import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { useState, useEffect } from "react";
-import { View } from "../../components/Themed";
+import { Text } from "react-native-paper";
 import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import auth from "../../util/auth";
 import Colors from "../../constants/Colors";
-import { Text } from "react-native-paper";
-
 import DashboardCard from "../../components/DashboardCard";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import i18n from "../i18n";
 
 interface ApiData {
   first_name: string;
@@ -19,147 +24,113 @@ interface ApiData {
 
 const getTimeOfDay = () => {
   const currentHour = new Date().getHours();
-
-  if (currentHour >= 5 && currentHour < 12) {
-    return "Morning";
-  } else if (currentHour >= 12 && currentHour < 18) {
-    return "Afternoon";
-  } else {
-    return "Evening";
-  }
+  if (currentHour >= 5 && currentHour < 12) return "Morning";
+  if (currentHour >= 12 && currentHour < 18) return "Afternoon";
+  return "Evening";
 };
 
 export default function PatientDashboard() {
+  const { width } = useWindowDimensions();
   const timeOfDay = getTimeOfDay();
   const [data, setData] = useState<ApiData | null>(null);
 
   useEffect(() => {
-    const isLoggedIn = async () => {};
-    isLoggedIn();
-
-    async function fetchData() {
-      let tkn = await AsyncStorage.getItem("token");
-      if (tkn === "" || tkn === null) {
-        return router.replace("/");
-      } else {
-        const data = await auth("profile");
-        setData(data.user);
-        console.log(data);
+    const fetchData = async () => {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        return router.dismissTo("/");
       }
-    }
+      try {
+        const response = await auth("profile");
+        setData(response.user);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
     fetchData();
   }, []);
 
   return (
-    <ScrollView>
-      <View style={styles.body}>
-        <View style={styles.bodyContent}>
-          <Text style={styles.subtitle}>Good {timeOfDay},</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.subtitle}>{i18n.t(`Good ${timeOfDay}`)},</Text>
 
-          <Text variant="titleLarge" style={styles.name}>
-            {data?.first_name} {data?.last_name}
-          </Text>
+      <Text variant="titleLarge" style={styles.name}>
+        {data?.first_name} {data?.last_name}
+      </Text>
 
-          <Text variant="bodyMedium">How are you feeling today?</Text>
+      <Text variant="bodyMedium" style={styles.greetingText}>
+        {i18n.t("feeling")}
+      </Text>
 
-          <DashboardCard
-            title="Find Doctors"
-            avatarIcon="doctor"
-            link="/home/doctors"
-          />
-
-          <DashboardCard
-            title="My Profile"
-            avatarIcon="account"
-            link="/profile"
-          />
-
-          {/* <DashboardCard
-            title="Manage Family Members"
-            avatarIcon="account-group"
-            link="/ComingSoon"
-          /> */}
-
-          <DashboardCard
-            title="Book Appointment"
-            avatarIcon="calendar-plus"
-            link="/(forms)/bookAppointment"
-          />
-
-          <DashboardCard
-            title="Your Appointments"
-            avatarIcon="calendar"
-            link="/appointments"
-          />
-
-          {/* <DashboardCard
-            title="Delivery Address"
-            avatarIcon="map-marker"
-            link="/ComingSoon"
-          /> */}
-
-          <DashboardCard
-            title="How App Works"
-            avatarIcon="alphabetical"
-            link="/home/howAppWorks"
-          />
-
-          <DashboardCard
-            title="Share Feedback"
-            avatarIcon="message-reply"
-            link="/home/ShareFeedback"
-          />
-        </View>
+      <View
+        style={[
+          styles.cardsContainer,
+          { flexDirection: width > 768 ? "row" : "column" },
+        ]}
+      >
+        <DashboardCard
+          title={i18n.t("Find A Doctor")}
+          avatarIcon="doctor"
+          link="/home/doctors"
+        />
+        <DashboardCard
+          title={i18n.t("Profile")}
+          avatarIcon="account"
+          link="/profile"
+        />
+        <DashboardCard
+          title={i18n.t("Book Appointment")}
+          avatarIcon="calendar-plus"
+          link="/(forms)/bookAppointment"
+        />
+        <DashboardCard
+          title={i18n.t("Your Appointments")}
+          avatarIcon="calendar"
+          link="/appointments"
+        />
+        <DashboardCard
+          title={i18n.t("How App Works")}
+          avatarIcon="alphabetical"
+          link="/home/howAppWorks"
+        />
+        <DashboardCard
+          title={i18n.t("Share Feedback")}
+          avatarIcon="message-reply"
+          link="/home/ShareFeedback"
+        />
       </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    alignItems: "center",
+  },
   name: {
     color: Colors.secondary,
     fontWeight: "800",
-    marginBottom: 13,
-  },
-  body: {
-    height: "100%",
-  },
-  bodyContent: {
-    flex: 1,
-    alignItems: "center",
-    padding: 30,
-  },
-  info: {
-    fontSize: 16,
-    marginTop: 10,
     marginBottom: 10,
-  },
-  description: {
-    fontSize: 16,
-    color: "#696969",
-    marginTop: 10,
     textAlign: "center",
-  },
-  buttonContainer: {
-    marginTop: 10,
-    height: 45,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 20,
-    color: "#fff",
-    width: 300,
-    borderRadius: 40,
-    backgroundColor: Colors.primary,
-  },
-  btnText: {
-    color: Colors.white,
-    fontSize: 13,
-    fontWeight: "800",
-    textTransform: "uppercase",
   },
   subtitle: {
     color: Colors.primary,
     fontWeight: "700",
+    fontSize: 20,
+  },
+  greetingText: {
+    fontSize: 16,
+    marginVertical: 10,
+    textAlign: "center",
+  },
+  cardsContainer: {
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 15,
+    marginTop: 20,
   },
 });

@@ -20,6 +20,7 @@ import axios from "axios";
 import { useRouter } from "expo-router";
 import { EvilIcons } from "@expo/vector-icons";
 import CalendarPicker from "react-native-calendar-picker";
+import i18n from "../i18n";
 
 const bookAppointment = () => {
   const router = useRouter();
@@ -110,10 +111,10 @@ const bookAppointment = () => {
       ) : (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.container}>
-            <Text style={globalStyles.title}>Book Appointment</Text>
+            <Text style={globalStyles.title}>{i18n.t("Book Appointment")}</Text>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Select Date</Text>
+              <Text style={styles.label}>{i18n.t("Select Date")}</Text>
               <CalendarPicker
                 // Basic settings
                 onDateChange={onDateChange}
@@ -174,7 +175,7 @@ const bookAppointment = () => {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Time</Text>
+              <Text style={styles.label}>{i18n.t("Time")}</Text>
               <TextInput
                 style={styles.input}
                 placeholder="HH:MM AM/PM"
@@ -184,14 +185,14 @@ const bookAppointment = () => {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Preferred Doctor</Text>
+              <Text style={styles.label}>{i18n.t("Preferred Doctor")}</Text>
               <View style={styles.pickerContainer}>
                 <Picker
                   style={styles.picker}
                   selectedValue={doctor}
                   onValueChange={setDoctor}
                 >
-                  <Picker.Item label="Select Doctor" value="" />
+                  <Picker.Item label={i18n.t("Select Doctor")} value="" />
                   {doctors.map((doctor: any) => (
                     <Picker.Item
                       key={doctor.user.id}
@@ -204,38 +205,39 @@ const bookAppointment = () => {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Gender</Text>
+              <Text style={styles.label}>{i18n.t("Gender")}</Text>
               <View style={styles.pickerContainer}>
                 <Picker
                   style={styles.picker}
                   selectedValue={gender}
                   onValueChange={setGender}
                 >
-                  <Picker.Item label="Select Gender" value="" />
-                  <Picker.Item label="Male" value="male" />
-                  <Picker.Item label="Female" value="female" />
-                  <Picker.Item label="Other" value="other" />
+                  <Picker.Item label={i18n.t("Select Gender")} value="" />
+                  <Picker.Item label={i18n.t("Male")} value="Male" />
+                  <Picker.Item label={i18n.t("Female")} value="Female" />
                 </Picker>
               </View>
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Medical Concern</Text>
+              <Text style={styles.label}>{i18n.t("Medical Concern")}</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Brief medical concern"
+                placeholder={i18n.t("Brief medical concern")}
                 value={medicalConcern}
                 onChangeText={setMedicalConcern}
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Description</Text>
+              <Text style={styles.label}>{i18n.t("Description")}</Text>
               <TextInput
                 style={[styles.input, styles.description]}
                 multiline
                 numberOfLines={4}
-                placeholder="Provide more details about your medical concern"
+                placeholder={i18n.t(
+                  "Provide more details about your medical concern"
+                )}
                 value={description}
                 onChangeText={setDescription}
               />
@@ -248,7 +250,9 @@ const bookAppointment = () => {
                 handleAppointmentSubmit();
               }}
             >
-              <Text style={styles.submitButtonText}>Submit Appointment</Text>
+              <Text style={styles.submitButtonText}>
+                {i18n.t("Submit Appointment")}
+              </Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
